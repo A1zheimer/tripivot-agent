@@ -1,0 +1,19 @@
+concept_id	en	zh	my	domain	definition	source	confidence
+tech.ai	artificial intelligence	人工智能	ဉာဏ်ရည်တု	technology	Systems performing tasks associated with human intelligence.	curated	1.0
+tech.ml	machine learning	机器学习	စက်သင်ယူမှု	technology	Algorithms that learn patterns from data.	curated	1.0
+tech.computer	computer	计算机	ကွန်ပျူတာ	technology	Electronic computing device.	curated	1.0
+tech.software	software	软件	ဆော့ဖ်ဝဲ	technology	Programs and operating information.	curated	1.0
+tech.hardware	hardware	硬件	ဟာ့ဒ်ဝဲ	technology	Physical components of a computer system.	curated	1.0
+tech.database	database	数据库	ဒေတာဘေ့စ်	technology	Organized collection of data.	curated	1.0
+tech.network	network	网络	ကွန်ရက်	technology	Connected computing devices.	curated	1.0
+tech.server	server	服务器	ဆာဗာ	technology	Computer or process providing a service.	curated	1.0
+tech.api	application programming interface	应用程序编程接口	အက်ပလီကေးရှင်း ပရိုဂရမ်းမင်း အင်တာဖေ့စ်	technology	Interface through which software components communicate.	curated	1.0
+tech.model	model	模型	မော်ဒယ်	technology	A computational or statistical model.	curated	1.0
+tech.data	data	数据	ဒေတာ	technology	Recorded facts or observations.	curated	1.0
+tech.security	security	安全	လုံခြုံရေး	technology	Protection from threats or unauthorized access.	curated	1.0
+translation.document	document	文档	စာရွက်စာတမ်း	general	A written or digital document.	curated	1.0
+translation.terminology	terminology	术语	ဝေါဟာရ	translation	Specialized words used in a domain.	curated	1.0
+translation.memory	memory	记忆	မှတ်ဉာဏ်	translation	Stored context used by the agent.	curated	1.0
+translation.quality	quality	质量	အရည်အသွေး	general	Degree of excellence or fitness for use.	curated	1.0
+product.user	user	用户	အသုံးပြုသူ	product	A person using a system or product.	curated	1.0
+product.application	application	应用程序	အက်ပလီကေးရှင်း	product	A software program designed for users.	curated	1.0

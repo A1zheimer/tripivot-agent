@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "built_at": "2026-08-11T08:15:42.787415+00:00",
+  "spec": {
+    "corpus": "ALT",
+    "source_language": "en",
+    "target_language": "zh",
+    "max_records": 10000,
+    "license": "CC-BY-4.0"
+  },
+  "archive": {
+    "path": "data/raw/ALT/en-zh.txt.zip",
+    "sha256": "7c4622e25abea0f5884351df5bc942a99928df5c99a27d126a560d5a6001e70a",
+    "metadata": {
+      "alignment_pairs": 18088,
+      "corpus": "ALT",
+      "documents": "",
+      "id": 648727,
+      "latest": "True",
+      "preprocessing": "moses",
+      "size": 1938,
+      "source": "en",
+      "source_tokens": 412997,
+      "target": "zh",
+      "target_tokens": 18458,
+      "url": "https://object.pouta.csc.fi/OPUS-ALT/v20191206/moses/en-zh.txt.zip",
+      "version": "v20191206"
+    }
+  },
+  "outputs": {
+    "train": "data/processed/ALT.en-zh.train.jsonl",
+    "validation": "data/processed/ALT.en-zh.validation.jsonl",
+    "test": "data/processed/ALT.en-zh.test.jsonl"
+  },
+  "stats": {
+    "corpus": "ALT",
+    "source_language": "en",
+    "target_language": "zh",
+    "raw_pairs": 10009,
+    "accepted_pairs": 10000,
+    "duplicate_pairs": 6,
+    "rejected": {
+      "source_script": 1,
+      "length": 2
+    },
+    "splits": {
+      "train": 9059,
+      "test": 487,
+      "validation": 454
+    }
+  }
+}

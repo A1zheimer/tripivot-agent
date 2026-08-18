@@ -1,0 +1,48 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "long-horizon-translation-agent"
+version = "0.1.0"
+description = "Long-horizon multilingual document translation agent and corpus pipeline"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Translation Agent Team" }]
+dependencies = []
+
+[project.optional-dependencies]
+nllb = [
+  "sentencepiece>=0.2",
+  "torch>=2.3",
+  "transformers>=4.44",
+  "datasets>=2.20",
+]
+eval = [
+  "sacrebleu>=2.4",
+]
+documents = [
+  "pdfplumber>=0.11",
+]
+dev = [
+  "pytest>=8.3",
+  "ruff>=0.6",
+]
+
+[project.scripts]
+translation-agent = "translation_agent.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/translation_agent"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

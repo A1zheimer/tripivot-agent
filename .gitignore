@@ -1,0 +1,18 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+dist/
+build/
+*.egg-info/
+
+.translation-agent/
+data/raw/
+data/processed/*.jsonl
+data/processed/*.sqlite3
+
+# 归档快照与本地产物不入库（267MB；清洗前原始数据的留存说明见 wiki/04）
+deliverables/
+outputs/
+.claude/

@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "built_at": "2026-08-17T08:36:22.879864+00:00",
+  "license": "CC-BY-SA-4.0",
+  "cutoff": "2023-01-01T00:00:00Z",
+  "collected": {
+    "tech": 10000,
+    "intl": 10000,
+    "finance": 10000
+  },
+  "monolingual_zh": {
+    "tech": 10000,
+    "intl": 10000,
+    "finance": 10000
+  },
+  "traditional_char_ratio": {
+    "tech": 0.0334,
+    "intl": 0.0562,
+    "finance": 0.038
+  },
+  "params": {
+    "per_domain": 10000,
+    "my_parallel": 30000,
+    "glossary_terms": 20000
+  },
+  "environment": {
+    "python": "3.11.9",
+    "nllb_model": "facebook/nllb-200-distilled-600M",
+    "opus_zh_en_model": "Helsinki-NLP/opus-mt-zh-en",
+    "git_commit": "uncommitted",
+    "torch": "2.13.0",
+    "transformers": "5.15.0"
+  },
+  "note": "Chinese passages are Wikipedia extracts updated since 2023; bilingual targets are LLM/NLLB distilled.",
+  "distill": {
+    "backend": "nllb",
+    "targets": [
+      "en",
+      "my"
+    ],
+    "domains": {
+      "tech": {
+        "zh-en": 9752,
+        "zh-en_rejected": {
+          "html": 26,
+          "degenerate": 8,
+          "length": 8,
+          "target_script": 1,
+          "empty": 2
+        },
+        "zh-my": 8054,
+        "zh-my_rejected": {
+          "degenerate": 784,
+          "html": 20,
+          "zawgyi": 48,
+          "empty": 1,
+          "target_script": 10
+        }
+      },
+      "intl": {
+        "zh-en": 9406,
+        "zh-en_rejected": {
+          "html": 25,
+          "length": 18,
+          "degenerate": 7,
+          "empty": 3
+        },
+        "zh-my": 7288,
+        "zh-my_rejected": {
+          "degenerate": 911,
+          "zawgyi": 42,
+          "html": 15,
+          "target_script": 6,
+          "length": 1
+        }
+      },
+      "finance": {
+        "zh-en": 9511,
+        "zh-en_rejected": {
+          "degenerate": 9,
+          "html": 12,
+          "empty": 2,
+          "length": 18
+        },
+        "zh-my": 6891,
+        "zh-my_rejected": {
+          "degenerate": 1192,
+          "zawgyi": 17,
+          "html": 9,
+          "target_script": 3
+        }
+      }
+    }
+  },
+  "zh_my_parallel": 22233,
+  "glossary_terms": 20000,
+  "maintenance": {
+    "history": [
+      {
+        "date": "2026-08-17",
+        "action": "clean-glossary x2 + idempotent verify",
+        "before": 19888,
+        "after": 8282
+      },
+      {
+        "date": "2026-08-17",
+        "action": "clean-distilled (cache sanitized to rejected markers)",
+        "zh_en": [
+          29861,
+          28669
+        ],
+        "zh_my": [
+          19852,
+          15144
+        ]
+      },
+      {
+        "date": "2026-08-17",
+        "action": "regenerate zh candidates (2-10 gram, boundary+interior filters)",
+        "total": 24000
+      }
+    ],
+    "rebuild": {
+      "action": "fill-domains --distill-backend nllb --my-parallel 30000 --glossary-terms 20000",
+      "device": "mps (local)",
+      "result": "glossary 20000 (gates enforced in-pipeline); zh-my parallel 22233 from full 10k/domain passage pool; rejected reasons recorded in distill.domains",
+      "originals": "pre-clean originals preserved in deliverables/ snapshot and zip"
+    }
+  }
+}

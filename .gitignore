@@ -1,18 +1,44 @@
+# Python
 __pycache__/
 *.py[cod]
 .pytest_cache/
 .ruff_cache/
 .venv/
+.venv-hpc/
 dist/
 build/
 *.egg-info/
 
+# macOS / 编辑器
+.DS_Store
+.claude/
+
+# Agent 运行时状态与本地运行产物
 .translation-agent/
+outputs/
+runs/
+logs/
+
+# 模型与数据集缓存（run_qwen_hpc.sh 默认 HF_HOME=.cache/huggingface）
+.cache/
+*.safetensors
+*.gguf
+
+# 原始下载与蒸馏中间缓存：可离线重建，见 data/README.md
 data/raw/
+
+# 成品语料 211MB，不入库；重建命令见 data/README.md。
+# 只保留 manifest、summary 与小体积术语库。
 data/processed/*.jsonl
 data/processed/*.sqlite3
+!data/processed/glossary.jsonl
+!data/processed/glossary.safe.jsonl
+!data/processed/glossary.silver.jsonl
+!data/processed/glossary.silver.evidence.jsonl
+!data/processed/glossary.gold.jsonl
+
+# 打包的训练快照，每个约 32MB；记录 SHA-256 的 JSON manifest 仍然入库
+artifacts/*.tar.gz
 
 # 归档快照与本地产物不入库（267MB；清洗前原始数据的留存说明见 wiki/04）
 deliverables/
-outputs/
-.claude/

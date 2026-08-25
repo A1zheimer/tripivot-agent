@@ -163,15 +163,18 @@ class GlossaryMemory:
         kept: list[GlossaryEntry] = []
         kept_terms: list[str] = []
         for _score, _confidence, _length, entry, source_term in matches:
-            duplicate = source_term in kept_terms
+            source_key = (
+                source_term.casefold() if source_language is Language.ENGLISH else source_term
+            )
+            duplicate = source_key in kept_terms
             proper_overlap = any(
-                (source_term in other or other in source_term) and source_term != other
+                (source_key in other or other in source_key) and source_key != other
                 for other in kept_terms
             )
             if duplicate or proper_overlap:
                 continue
             kept.append(entry)
-            kept_terms.append(source_term)
+            kept_terms.append(source_key)
             if len(kept) >= top_k:
                 break
         return kept
@@ -189,7 +192,12 @@ class GlossaryMemory:
             source_term = entry.term(source_language)
             target_term = entry.term(target_language)
             if source_term and target_term:
-                groups[source_term].add(target_term)
+                source_key = (
+                    source_term.casefold()
+                    if source_language is Language.ENGLISH
+                    else source_term
+                )
+                groups[source_key].add(target_term)
         return {
             source_term: sorted(targets)
             for source_term, targets in groups.items()

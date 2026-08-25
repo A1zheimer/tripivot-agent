@@ -35,6 +35,11 @@ from translation_agent.preprocessing import (
     normalize_text,
     pack_passages,
 )
+from translation_agent.training_data import (
+    load_glossary,
+    prepare_translation_examples,
+    prompt_messages,
+)
 
 
 def test_text_normalization_and_quality_filter() -> None:
@@ -318,6 +323,7 @@ def test_conflicting_glossary_terms_reported_not_double_enforced(tmp_path: Path)
     entries = [
         GlossaryEntry(concept_id="q1", terms={"en": "quality", "zh": "质量"}),
         GlossaryEntry(concept_id="q2", terms={"en": "quality", "zh": "品质"}),
+        GlossaryEntry(concept_id="q3", terms={"en": "QUALITY", "zh": "质"}),
     ]
     memory = MemorySystem(tmp_path / "state", GlossaryMemory(entries))
     # Both chunks follow the single enforced mapping (质量)…
@@ -842,6 +848,58 @@ def test_cli_translate_auto_ingests_before_agent(
     assert output_path.read_text(encoding="utf-8") == "你好世界\n"
     report = json.loads((tmp_path / "output.zh.md.report.json").read_text(encoding="utf-8"))
     assert report["ingestion"]["source_format"] == "text"
+
+
+def test_training_data_mirrors_directions_and_injects_gold_terms(tmp_path: Path) -> None:
+    for target in ("en", "my"):
+        path = tmp_path / f"zh-{target}.tech.jsonl"
+        source = "人工智能 improves finance." if target == "en" else "人工智能很重要。"
+        target_text = "AI improves finance." if target == "en" else "ဉာဏ်ရည်တု အရေးကြီးသည်။"
+        path.write_text(
+            json.dumps(
+                {
+                    "id": f"tech-{target}",
+                    "domain": "tech",
+                    "split": "train",
+                    "source_text": source,
+                    "target_text": target_text,
+                },
+                ensure_ascii=False,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+    glossary_path = tmp_path / "glossary.jsonl"
+    glossary_path.write_text(
+        json.dumps(
+            {
+                "concept_id": "ai",
+                "terms": {"zh": "人工智能", "en": "AI", "my": "ဉာဏ်ရည်တု"},
+                "domain": "tech",
+            },
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    glossary = load_glossary(glossary_path)
+    examples, stats = prepare_translation_examples(
+        tmp_path,
+        domains=["tech"],
+        directions=["zh-en", "en-zh", "zh-my", "my-zh"],
+        glossary=glossary,
+    )
+    assert len(examples) == 4
+    assert {item.direction for item in examples} == {"zh-en", "en-zh", "zh-my", "my-zh"}
+    assert stats["examples"] == 4
+
+    zh_to_en = next(item for item in examples if item.direction == "zh-en")
+    en_to_zh = next(item for item in examples if item.direction == "en-zh")
+    assert en_to_zh.source_text == "AI improves finance."
+    assert en_to_zh.target_text == "人工智能 improves finance."
+    assert "人工智能 => AI" in prompt_messages(zh_to_en, glossary)[1]["content"]
+    assert "AI => 人工智能" in prompt_messages(en_to_zh, glossary)[1]["content"]
 
 
 def test_cjk_leading_utf8_documents_are_accepted(tmp_path: Path) -> None:

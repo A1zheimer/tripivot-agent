@@ -1,0 +1,30 @@
+{
+  "name": "qwen_training_data_v2",
+  "file": "qwen_training_data_v2.tar.gz",
+  "sha256": "02792b62ca9e16a83e2ecd6277c7dacd7eac885401104fe7614c088a9df17a03",
+  "created_at": "2026-08-18T08:35:00Z",
+  "contains": [
+    "data/processed/zh-en.tech.jsonl",
+    "data/processed/zh-en.intl.jsonl",
+    "data/processed/zh-en.finance.jsonl",
+    "data/processed/zh-my.tech.jsonl",
+    "data/processed/zh-my.intl.jsonl",
+    "data/processed/zh-my.finance.jsonl",
+    "data/processed/glossary.jsonl",
+    "data/processed/glossary.safe.jsonl",
+    "data/processed/glossary.silver.jsonl",
+    "data/processed/glossary.silver.evidence.jsonl",
+    "data/processed/glossary.silver.review.tsv",
+    "data/processed/glossary.silver.report.json",
+    "data/processed/domain.summary.json"
+  ],
+  "training_rows": {
+    "zh_en": 28669,
+    "zh_my": 22233,
+    "curated_glossary": 18,
+    "safe_glossary": 204,
+    "silver_machine_reviewed_glossary": 214
+  },
+  "split_policy": "Use the split field in every JSONL record; do not put test rows into SFT.",
+  "glossary_policy": "The default remains the 18-entry curated glossary. Use glossary.safe.jsonl explicitly for terminology ablations; it is silver-tier and still requires human review before gold promotion."
+}

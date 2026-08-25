@@ -1,0 +1,22 @@
+{
+  "name": "qwen_training_data_v1",
+  "file": "qwen_training_data_v1.tar.gz",
+  "sha256": "51274a9f9fac961f83ab8ee11ed15557daf6a76a3e6147afe9416675536bd1ef",
+  "created_at": "2026-08-18T02:53:00Z",
+  "contains": [
+    "data/processed/zh-en.tech.jsonl",
+    "data/processed/zh-en.intl.jsonl",
+    "data/processed/zh-en.finance.jsonl",
+    "data/processed/zh-my.tech.jsonl",
+    "data/processed/zh-my.intl.jsonl",
+    "data/processed/zh-my.finance.jsonl",
+    "data/processed/glossary.jsonl",
+    "data/processed/domain.summary.json"
+  ],
+  "training_rows": {
+    "zh_en": 28669,
+    "zh_my": 22233,
+    "curated_glossary": 18
+  },
+  "split_policy": "Use the split field in every JSONL record; do not put test rows into SFT."
+}

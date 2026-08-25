@@ -126,5 +126,27 @@
       "result": "glossary 20000 (gates enforced in-pipeline); zh-my parallel 22233 from full 10k/domain passage pool; rejected reasons recorded in distill.domains",
       "originals": "pre-clean originals preserved in deliverables/ snapshot and zip"
     }
+  },
+  "glossary_quality": {
+    "status": "raw quantity complete; silver and model-assisted gold subsets built; native Burmese sign-off pending",
+    "raw_entries": 20000,
+    "exact_title_candidates": 810,
+    "silver_entries": 214,
+    "safe_merged_entries": 204,
+    "curated_entries": 18,
+    "casefold_english_conflicts": 0,
+    "validation": "English->Chinese and Burmese->Chinese NLLB backtranslation: silver >=0.80, safe >=0.90",
+    "report": "glossary.silver.report.json",
+    "evidence": "glossary.silver.evidence.jsonl",
+    "policy": "default glossary.jsonl remains curated; use glossary.safe.jsonl only for explicit ablations",
+    "review_worksheet": "glossary.silver.review.tsv",
+    "safe_policy": "only silver entries with both backtranslation similarities >= 0.90 plus 18 curated seeds",
+    "model_assisted_gold_entries": 232,
+    "gold_accepted": 177,
+    "gold_fixed": 37,
+    "gold_rejected": 0,
+    "gold_report": "glossary.gold.report.json",
+    "gold_review_worksheet": "glossary.gold.review.tsv",
+    "gold_policy": "214 Codex-reviewed silver entries plus 18 curated seeds; confidence 0.95/1.0; not a substitute for native Burmese translator sign-off"
   }
 }

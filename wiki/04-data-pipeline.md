@@ -46,6 +46,9 @@ flowchart LR
 | 中缅平行（蒸馏） | `zh-my.{tech,intl,finance}.jsonl`、`zh-my.parallel.jsonl`（合并版） | 22,233（8,054/7,288/6,891） | NLLB 蒸馏，强制 Unicode 缅文 | 重蒸馏扩池（每域用满 1 万段）后超过 2 万目标，退化 0 残留 |
 | 术语种子 | `glossary.jsonl`（源：`data/seeds/glossary.tsv`） | 18 | 人工 curated | confidence 1.0，打通链路用 |
 | 领域术语库 | `glossary.domain.jsonl` | 20,000 | n-gram 挖掘 + NLLB 蒸馏 + 质量门禁 | 清洗后重蒸馏补齐；域分布 tech 9,668 / intl 7,589 / finance 2,743；confidence 0.6 |
+| 安全术语合并库 | `glossary.safe.jsonl` | 204 | 18 条 curated + 186 条 strict silver | casefold 冲突 0；默认仍用 18 条 curated，显式实验才启用 safe |
+| Silver 术语库 | `glossary.silver.jsonl` | 214 | Wikipedia 精确标题 + 双路回译验证 | `glossary.silver.evidence.jsonl` 保留来源 URL、回译结果与相似度 |
+| Model-assisted Gold | `glossary.gold.jsonl` | 232 | 214 条 Codex 复核 silver + 18 条 curated | 177 ACCEPT / 37 FIX / 0 REJECT；仍需母语缅文译者最终签核 |
 | 中文术语候选 | `glossary.zh.candidates.jsonl` | 24,000（每域 8,000） | 挖掘中间产物（2026-08-17 按新规则重挖） | 2-10 字 n-gram、边界/内部虚词过滤；蒸馏前缓存 |
 | 构建清单 | `bootstrap.summary.json`、`domain.summary.json`、`ALT.*.manifest.json` | — | — | 含 sha256、拒绝原因统计、切分计数、维护记录 |
 
@@ -61,8 +64,31 @@ flowchart LR
 | 蒸馏语料退化清洗（`corpus clean-distilled`） | zh-en 29,861 → 28,669；zh-my 19,852 → 15,144 | 剔除译文含重复循环的行（20 字符片段 ×8 或 60 字符片段 ×3，枚举类正常复现不误伤） |
 | 候选重挖 | 24,000（新规则） | n-gram 上限 4→10 字（「国际货币基金组织」「中华人民共和国外交部」可整词挖出）、CJK run 上限 12→无界（消除截断碎片）、边界 + 内部虚词过滤 |
 | 本机重蒸馏补齐（2026-08-17/18，MPS 约 3 小时） | 术语 → 20,000；zh-my → 22,233 | `fill-domains --distill-backend nllb --my-parallel 30000 --glossary-terms 20000`；蒸馏缓存先净化（退化行改写为已拒标记，防止复活）；管线门禁内联，拒绝原因逐域入 summary（如 tech zh-my 拦退化 784 条） |
+| 术语质量分层（2026-08-18） | raw 20,000 → silver 214 → safe 204 → model-assisted gold 232 | 只取与中文 Wikipedia 页面标题精确匹配的 raw 术语；过滤 UI/模板句；执行英→中、缅→中 NLLB 回译，silver 层双向相似度 ≥0.80；safe 层再要求双向 ≥0.90；casefold English 冲突组整组拒绝；合并 18 条 curated。随后逐条复核 silver：177 ACCEPT / 37 FIX / 0 REJECT |
 
 **注意**：任务书口径应以「最终交付量」呈现——中缅平行 22,233 条（重蒸馏后）、领域术语 20,000 条，均已达标；但术语域分布不均（finance 仅 2,743），财经向使用前建议人工补审。蒸馏数据整体仍需按用途人工抽检（见下「质量边界」）。
+
+### 术语质量分层
+
+`glossary.domain.jsonl` 是 raw 层，不应直接用于强约束或 RL reward。`glossary.silver.jsonl` 的生成链路是：
+
+```text
+raw 20,000
+  ↓ 只保留与 zh.{tech,intl,finance}.jsonl 的 title 精确匹配
+  ↓ 过滤英文 UI/模板/错误句、异常标点、超长短语
+  ↓ NLLB：English -> Chinese 回译
+  ↓ NLLB：Burmese -> Chinese 回译
+  ↓ 两个回译与原中文标题相似度均 ≥ 0.80
+  ↓ casefold English 多中文冲突整组拒绝
+silver 214
+  ↓ 双向回译相似度均 ≥0.90
+strict silver 186
+  ↓ 合并 18 条 curated
+safe 204
+```
+
+结果：concept / 中文重复 0，当前程序化 reject 0，casefold en→zh 冲突 0，每条 silver 都有 evidence 文件记录来源 URL、回译文本与相似度。silver 仍是机器审核层，人工复核后才可升 Gold。
+`glossary.silver.review.tsv` 是复核工作表。`scripts/apply_glossary_review.py` 已逐条复核 214 行：177 条 ACCEPT、37 条 FIX、0 条 REJECT，并生成 `glossary.gold.jsonl` / `glossary.gold.review.tsv` / `glossary.gold.report.json`。该 Gold 为 model-assisted review，正式论文或生产前仍建议母语缅文译者抽检签核。
 
 ## 关键设计
 

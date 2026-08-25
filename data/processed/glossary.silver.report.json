@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "source_glossary": "data/processed/glossary.domain.jsonl",
+  "output": "data/processed/glossary.silver.jsonl",
+  "evidence_output": "data/processed/glossary.silver.evidence.jsonl",
+  "raw_entries": 20000,
+  "exact_title_candidates": 810,
+  "validated_before_conflict_dedup": 214,
+  "safe_entries": 186,
+  "merged_safe_entries": 204,
+  "curated_seed_entries_merged": 18,
+  "merged_output": "data/processed/glossary.safe.jsonl",
+  "rejected": {
+    "ambiguous_or_uncanonicalizable": 8,
+    "english_malformed_apostrophe": 5,
+    "english_disallowed_punctuation": 3,
+    "english_too_long": 1,
+    "burmese_backtranslation_mismatch": 243,
+    "english_backtranslation_mismatch": 353
+  },
+  "casefold_conflict_groups": 0,
+  "domains": {
+    "finance": 49,
+    "intl": 87,
+    "tech": 78
+  },
+  "validation": {
+    "model": "facebook/nllb-200-distilled-600M",
+    "device": "cpu",
+    "method": "English->Chinese and Burmese->Chinese NLLB backtranslation",
+    "min_similarity": 0.8,
+    "safe_min_similarity": 0.9
+  },
+  "review_status": "silver-machine-reviewed; human review required before gold",
+  "review_worksheet": "data/processed/glossary.silver.review.tsv",
+  "strict_candidates_before_conflict_dedup": 186
+}

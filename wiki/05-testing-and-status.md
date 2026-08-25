@@ -1,13 +1,13 @@
 # 测试、已知问题与路线图
 
 > **TL;DR**
-> 31 个 pytest 用例守住预处理、语料构建、本地复用、端到端主路径，以及 2026-08-17 修复批次的行为（代码围栏、断点续跑、执法口径、词界匹配与符号术语、后端重试、双侧歧义、退化检测、术语清洗、空译文拒绝、词表冲突告警），并覆盖前置 ingestion 与 GFM 列表/表格保结构。设计评审发现的四个高危问题已全部修复，对抗式复审发现的次生问题（检索排序、围栏符号混用、快照损坏路径、缩进代码泄漏等）也已修复。自动评测（BLEU/COMET 等）仍未接入。下一步：HPC 微调 → GRPO 强化学习 → 向量 RAG → 三条件对照评测。
+> 32 个 pytest 用例守住预处理、语料构建、本地复用、端到端主路径，以及 2026-08-17 修复批次的行为（代码围栏、断点续跑、执法口径、词界匹配与符号术语、后端重试、双侧歧义、退化检测、术语清洗、空译文拒绝、词表冲突告警），并覆盖前置 ingestion 与 GFM 列表/表格保结构。设计评审发现的四个高危问题已全部修复，对抗式复审发现的次生问题（检索排序、围栏符号混用、快照损坏路径、缩进代码泄漏等）也已修复。自动评测（BLEU/COMET 等）仍未接入。下一步：HPC 微调 → GRPO 强化学习 → 向量 RAG → 三条件对照评测。
 
 [← 返回首页](./README.md) · [上一页：数据管线](./04-data-pipeline.md)
 
 ## 测试覆盖
 
-[test_core.py](../tests/test_core.py) 共 31 个用例，`pytest` 一条命令全跑：
+[test_core.py](../tests/test_core.py) 共 32 个用例，`pytest` 一条命令全跑：
 
 | 用例 | 验证什么 | 手法亮点 |
 |---|---|---|
@@ -38,6 +38,7 @@
 | `test_docx_tracked_changes_are_blocking` | tracked changes 阻止进入 Agent | 防止翻译未定稿内容 |
 | `test_pdf_ingestion_removes_repeated_edges` | 文本型 PDF 页眉/页脚重复行剔除，页数与覆盖率入报告 | PDF 启发式边界 |
 | `test_cli_translate_auto_ingests_before_agent` | TXT 自动转 canonical Markdown，sidecar 与翻译报告贯通 | CLI ingestion 集成 |
+| `test_training_data_mirrors_directions_and_injects_gold_terms` | 双语对自动镜像四语向；仅注入 18 条人工术语中的命中项 | Qwen SFT 数据构造 |
 
 **仍未覆盖**（改到相关代码时请补）：更多 CLI 参数与错误分支、真实 pandoc/pdfplumber 端到端转换、`NllbBackend` 真实调用、维基采集与蒸馏的真实网络路径、繁简转换（未实现，见下）。
 
@@ -48,7 +49,7 @@
 | ✅ 已修复（2026-08-17） | `translate` 子命令 `NameError` | [cli.py](../src/translation_agent/cli.py) 曾引用未导入的 `GlossaryMemory`/`MemorySystem`，已补 `from .memory import ...` |
 | ✅ 已修复（2026-08-17） | 翻译侧无断点续跑 | `ProgressMemory` 补 `load`；`translate_document` 重跑跳过已完成块并重建 L1 上下文；单块失败记 `chunk_error` 后继续，CLI 写出部分产物并以退出码 1 结束。README 旧版「可恢复」的说法现在属实 |
 | ✅ 已修复（2026-08-17） | 术语注入/执法口径分裂（top20 vs top100） | 反思器改为只检查注入提示词的同一批术语；`plan.glossary` 全局检索已随之移除（无消费者的死计算） |
-| ✅ 已修复（2026-08-17/18） | 术语库 58% 碎片/伪术语 | 挖掘规则重写（2-10 字、run 无上限、边界+内部虚词过滤）+ 存量清洗，随后本机（MPS）重蒸馏补齐至 **20,000**（管线门禁内联，幂等校验 0 残留）；域分布 tech 9,668 / intl 7,589 / finance 2,743（严过滤对财经文本杀伤大，见[数据管线](./04-data-pipeline.md)） |
+| ✅ 分层复核（2026-08-19） | raw 术语库仍有语义噪声 | `glossary.domain.jsonl` 保持 raw/quarantine，不默认用于强约束或 RL reward。214 条 silver 已逐条复核：177 ACCEPT / 37 FIX / 0 REJECT，生成 232 条 model-assisted Gold（含 18 条 curated），casefold 冲突 0。该层仍需母语缅文译者最终签核；默认翻译/训练仍可用 18 条 curated，Gold 用于显式消融 |
 | ✅ 已修复（2026-08-17/18） | zh-my 蒸馏语料 24% 退化循环 | 管线内置两档退化检测（枚举不误伤）+ 存量清洗，随后本机重蒸馏扩池（每域用满 1 万段）至 **22,233** 条，全量退化扫描 0 残留 |
 | ✅ 已修复（2026-08-17） | 后端无重试、截断静默、大小写不对称、代码围栏被切碎、修订盲重译、NLLB 无效重试 | 分别对应：退避重试 + `TranslationBackendError`、`finish_reason` 检查、目标侧 casefold、围栏感知规划、修订带旧稿与 expected 指令、后端能力声明（`revision_capable`） |
 | ⚠️ 待办 | 无自动评测指标 | `TranslationReport` 只有过程指标（命中/修订/issue）；`pyproject.toml` 的 `eval` extra（sacrebleu）尚未在代码中使用，BLEU/COMET/chrF++/TCR 对照实验在路线图 |
@@ -60,6 +61,11 @@
 | ℹ️ 已知限制 | 手写 GFM 长尾结构不保形 | setext 标题（下划线式）、blockquote、短分隔符表格（`\|--\|`）、正文紧邻列表（无空行）、松散列表空行——这些结构会退化为普通段落送模型。pandoc（DOCX/HTML）产物已被归一化不受影响；纯手写 md 建议先经 `ingest` 走 pandoc html 路径或避免这些写法 |
 | ℹ️ 已知限制 | 表格逐行分块：第 5 行起失去表头上下文 | L1 窗口=4；且模型返回行数与列数不符时整行原样回填。改进方向：行块提示词附带表头（在路线图「结构感知分块」） |
 | ℹ️ 已知限制 | GBK 等非 UTF-8 编码被拒（消息已统一并提示转码），但「恰好是合法 UTF-8 的 GBK 字节」仍可能以乱码穿透 | 拒绝大多数场景；乱码穿透需引入编码启发检测（未做）。建议源头转 UTF-8 |
+| ✅ 已修复（2026-08-18） | 训练评测把 4 个语向混在一个 BLEU/chrF 里 | `evaluate_generation` 现在同时输出 overall 与 `by_direction`，报告优先看 zh-en/en-zh/zh-my/my-zh 分组指标 |
+| ✅ 已修复（2026-08-18） | `--load-in-4bit` 依赖未声明 | 新增 `[qlora]` extra（`bitsandbytes`）；A800 默认 LoRA 路径仍不需要安装它 |
+| ℹ️ 已知限制 | `python -m translation_agent.training_data` 导出含 split=test 行 | 训练脚本自身的 `prepared_examples.jsonl` 已正确排除 test；仅模块 CLI 的导出包含——勿直接拿它喂 SFT |
+| ℹ️ 已知限制 | 训练评测 tokenizer 被改为左填充后随 final_adapter 一起保存 | 下游加载适配器会继承 `padding_side=left`，通常无害 |
+| ℹ️ 已知限制 | max_length=1536 下 zh-my 训练样本约丢 7% | A800 上可提到 2048 捞回；launcher 的 GLOSSARY 默认值已跟随 DATA_DIR |
 | ℹ️ 已知限制 | 英文按 `。！？!?` 断句，ASCII `.` 不切分 | 避免 `3.14`/`U.S.` 误断的保守取舍；英文长段可能整段成块 |
 
 ## 路线图

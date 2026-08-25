@@ -1,0 +1,281 @@
+{
+  "schema_version": 1,
+  "input": "data/processed/glossary.silver.review.tsv",
+  "review_output": "data/processed/glossary.gold.review.tsv",
+  "output": "data/processed/glossary.gold.jsonl",
+  "reviewer": "Codex model-assisted terminology review",
+  "review_scope": "all 214 silver rows; zh/en/my compared with source title and evidence",
+  "silver_rows": 214,
+  "actions": {
+    "FIX": 37,
+    "ACCEPT": 177
+  },
+  "accepted_or_fixed": 214,
+  "rejected": 0,
+  "fixes": [
+    {
+      "row": "1",
+      "zh": "建筑师",
+      "reason": "use singular occupational term",
+      "en": "Architect",
+      "my": "ဗိသုကာပညာရှင်"
+    },
+    {
+      "row": "5",
+      "zh": "董事会",
+      "reason": "canonical board-of-directors term",
+      "en": "Board of directors",
+      "my": "ဒါရိုက်တာဘုတ်အဖွဲ့"
+    },
+    {
+      "row": "7",
+      "zh": "中国石油",
+      "reason": "disambiguate the corporate entity",
+      "en": "China National Petroleum Corporation",
+      "my": "တရုတ်အမျိုးသာ်ရေနံကော်ပိုရေးရှင်း"
+    },
+    {
+      "row": "8",
+      "zh": "商业银行",
+      "reason": "singular canonical term",
+      "en": "Commercial bank",
+      "my": "စီးပွားရေးဘဏ်"
+    },
+    {
+      "row": "11",
+      "zh": "刚果民主共和国",
+      "reason": "canonical country-name word order",
+      "en": "Democratic Republic of the Congo",
+      "my": "ကွန်ဂိုဒီမိုကရက်တစ်သမ္မတနိုင်ငံ"
+    },
+    {
+      "row": "23",
+      "zh": "投资银行",
+      "reason": "singular canonical term",
+      "en": "Investment bank",
+      "my": "ရင်းနှီးမြှုပ်နှံမှုဘဏ်"
+    },
+    {
+      "row": "37",
+      "zh": "法国大革命",
+      "reason": "remove unnecessary article",
+      "en": "French Revolution",
+      "my": "ပြင်သစ်တော်လှန်ရေး"
+    },
+    {
+      "row": "40",
+      "zh": "美国国会",
+      "reason": "name the legislature precisely",
+      "en": "United States Congress",
+      "my": "အမေရိကန်ကွန်ဂရက်"
+    },
+    {
+      "row": "63",
+      "zh": "联合国常务副秘书长",
+      "reason": "canonical UN Deputy Secretary-General title",
+      "en": "Deputy Secretary-General of the United Nations",
+      "my": "ကုလသမဂ္ဂဒုတိယအတွင်းရေးမှူးချုပ်"
+    },
+    {
+      "row": "64",
+      "zh": "环境保护",
+      "reason": "environmental-protection collocation",
+      "en": "Environmental protection",
+      "my": "ပတ်ဝန်းကျင်ထိန်းသိမ်းရေး"
+    },
+    {
+      "row": "86",
+      "zh": "科索沃战争",
+      "reason": "make Kosovo transliteration consistent",
+      "en": "Kosovo War",
+      "my": "ကိုဆိုဗိုစစ်ပွဲ"
+    },
+    {
+      "row": "90",
+      "zh": "伦敦条约",
+      "reason": "canonical treaty title",
+      "en": "Treaty of London",
+      "my": "လန်ဒန်စာချုပ်"
+    },
+    {
+      "row": "100",
+      "zh": "非政府组织",
+      "reason": "expand NGO rather than retaining acronym",
+      "en": "Non-governmental organizations",
+      "my": "အစိုးရမဟုတ်သောအဖွဲ့အစည်းများ"
+    },
+    {
+      "row": "120",
+      "zh": "中东战争",
+      "reason": "remove unnecessary article",
+      "en": "Middle East War",
+      "my": "အရှေ့အလယ်ပိုင်း စစ်ပွဲ"
+    },
+    {
+      "row": "125",
+      "zh": "联合国开发计划署",
+      "reason": "UNDP is a programme, not a project",
+      "en": "United Nations Development Programme",
+      "my": "ကုလသမဂ္ဂဖွံ့ဖြိုးမှုအစီအစဉ်"
+    },
+    {
+      "row": "129",
+      "zh": "联合国秘书处",
+      "reason": "Secretariat is a department, not the Secretary-General",
+      "en": "United Nations Secretariat",
+      "my": "ကုလသမဂ္ဂအတွင်းရေးမှူးဌာန"
+    },
+    {
+      "row": "132",
+      "zh": "华盛顿会议",
+      "reason": "conference noun and transliteration",
+      "en": "Washington Conference",
+      "my": "ဝါရှင်တန်ညီလာခံ"
+    },
+    {
+      "row": "136",
+      "zh": "雅尔塔会议",
+      "reason": "conference noun and transliteration",
+      "en": "Yalta Conference",
+      "my": "ယာလတာညီလာခံ"
+    },
+    {
+      "row": "143",
+      "zh": "编码理论",
+      "reason": "coding theory, not code writing",
+      "en": "Coding theory",
+      "my": "ကုဒ်သီအိုရီ"
+    },
+    {
+      "row": "148",
+      "zh": "计算机动画",
+      "reason": "computer animation term",
+      "en": "Computer Animation",
+      "my": "ကွန်ပျူတာအန်နီမေးရှင်း"
+    },
+    {
+      "row": "150",
+      "zh": "计算机模拟",
+      "reason": "simulation includes generation of a model",
+      "en": "Computer simulation",
+      "my": "ကွန်ပျူတာပုံတူဖန်တီးမှု"
+    },
+    {
+      "row": "154",
+      "zh": "数据结构",
+      "reason": "data-structure collocation",
+      "en": "Data structure",
+      "my": "ဒေတာဖွဲ့စည်းပုံ"
+    },
+    {
+      "row": "159",
+      "zh": "分布式数据库",
+      "reason": "formal distributed-database term",
+      "en": "Distributed database",
+      "my": "ဖြန့်ကျက်ဒေတာဘေ့စ်"
+    },
+    {
+      "row": "162",
+      "zh": "嵌入式系统",
+      "reason": "replace mixed partial-English phrase",
+      "en": "Embedded systems",
+      "my": "စွဲထည့်ထားသောစနစ်များ"
+    },
+    {
+      "row": "169",
+      "zh": "湖南农业大学",
+      "reason": "official university name and cleaner Burmese",
+      "en": "Hunan Agricultural University",
+      "my": "ဟူနန်စိုက်ပျိုးရေးတက္ကသိုလ်"
+    },
+    {
+      "row": "176",
+      "zh": "互联网审查",
+      "reason": "censorship/screening collocation",
+      "en": "Internet censorship",
+      "my": "အင်တာနက်စိစစ်ခြင်း"
+    },
+    {
+      "row": "184",
+      "zh": "移动设备",
+      "reason": "devices, not general tools",
+      "en": "Mobile devices",
+      "my": "မိုဘိုင်းစက်ပစ္စည်းများ"
+    },
+    {
+      "row": "186",
+      "zh": "博物馆",
+      "reason": "singular canonical generic term",
+      "en": "Museum",
+      "my": "ပြတိုက်"
+    },
+    {
+      "row": "189",
+      "zh": "可编程逻辑控制器",
+      "reason": "replace sentence-like NLLB output with a noun phrase",
+      "en": "Programmable logic controller",
+      "my": "ပရိုဂရမ်ရေးနိုင်သောလော်ဂျစ်ထိန်းချုပ်ကိရိယာ"
+    },
+    {
+      "row": "194",
+      "zh": "实时操作系统",
+      "reason": "real-time operating-system collocation",
+      "en": "Real-time operating systems",
+      "my": "အချိန်နှင့်တပြေးညီလည်ပတ်သောစနစ်"
+    },
+    {
+      "row": "195",
+      "zh": "小型计算机",
+      "reason": "historical computer class, not arbitrary small computers",
+      "en": "Minicomputer",
+      "my": "မီနီကွန်ပျူတာ"
+    },
+    {
+      "row": "197",
+      "zh": "软件开发工具包",
+      "reason": "canonical SDK term",
+      "en": "Software development kit",
+      "my": "ဆော့ဝဲဖွံ့ဖြိုးရေးကိရိယာအစု"
+    },
+    {
+      "row": "199",
+      "zh": "软件工程",
+      "reason": "engineering discipline, not engineer",
+      "en": "Software engineering",
+      "my": "ဆော့ဝဲအင်ဂျင်နီယာပညာ"
+    },
+    {
+      "row": "203",
+      "zh": "系统管理员",
+      "reason": "system administrator occupation",
+      "en": "System Administrator",
+      "my": "စနစ်စီမံခန့်ခွဲသူ"
+    },
+    {
+      "row": "208",
+      "zh": "文本编辑器",
+      "reason": "editor software, not human editor",
+      "en": "Text Editor",
+      "my": "စာသားတည်းဖြတ်ရေးဆော့ဝဲ"
+    },
+    {
+      "row": "209",
+      "zh": "计算理论",
+      "reason": "theory of computation collocation",
+      "en": "Theory of computation",
+      "my": "တွက်ချက်မှုသီအိုရီ"
+    },
+    {
+      "row": "210",
+      "zh": "城市规划",
+      "reason": "urban-planning discipline",
+      "en": "Urban planning",
+      "my": "မြို့ပြစီမံခန့်ခွဲမှု"
+    }
+  ],
+  "rejected_rows": [],
+  "gold_entries": 232,
+  "curated_entries_merged": 18,
+  "confidence": 0.95,
+  "boundary": "Model-assisted review, not a replacement for native Burmese translator sign-off; keep this distinction in reports."
+}

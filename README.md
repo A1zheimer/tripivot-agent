@@ -64,6 +64,8 @@ data/processed/
 
 每个双语 manifest 记录下载 URL、OPUS 元数据、压缩包 SHA-256、原始/接收/去重/各类拒绝数量。中缅两个数据集按照中文枢纽句的哈希切分，防止三语对齐后跨训练集和测试集泄漏。
 
+`data/processed/*.jsonl` 成品语料（约 211MB）与 `data/raw/` 缓存不入库，仓库只保留 manifest、构建摘要和小体积术语库。入库范围与逐步重建命令见 [data/README.md](data/README.md)。
+
 默认选择 ALT，是因为它同时覆盖英语、简体中文和缅甸语，语料翻译部分由 NICT 以 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 发布。数据不是本仓库代码许可证的一部分；使用时仍应保留 manifest 中的来源和署名信息。
 
 单独构建某个 OPUS 语料：
@@ -99,6 +101,28 @@ data/raw/distill/{domain}.zh-my.jsonl
 ```
 
 中英使用 `Helsinki-NLP/opus-mt-zh-en`，中缅使用 NLLB-200 distilled 600M。蒸馏支持断点续跑。
+
+术语库分为多层：`glossary.domain.jsonl` 是 raw 自动术语，只归档不默认使用；`glossary.silver.jsonl` 从真实 Wikipedia 标题出发并经英/缅双路回译校验；`glossary.safe.jsonl` 合并双路相似度 ≥0.90 的 strict silver 与 18 条人工术语；`glossary.gold.jsonl` 是 232 条 model-assisted reviewed 术语（177 ACCEPT / 37 FIX / 0 REJECT，含 18 条 curated）。默认仍用 18 条 curated；`GLOSSARY=data/processed/glossary.gold.jsonl` 可显式开启复核术语消融。
+
+## Qwen-only HPC 自动训练
+
+仓库提供一个单模型、单命令的 Qwen LoRA 训练入口，不训练 Gemma：
+
+```bash
+bash scripts/run_qwen_hpc.sh
+```
+
+SLURM 用户修改 `scripts/qwen_lora_sbatch.sh` 中的 partition/module 后提交：
+
+```bash
+sbatch scripts/qwen_lora_sbatch.sh
+```
+
+默认使用 `Qwen/Qwen2.5-7B-Instruct`、四个双语方向、18 条人工术语、2 epochs LoRA，
+并自动断点续跑。训练数据打包为 `artifacts/qwen_training_data_v3.tar.gz`（约 32MB，
+不入库）：HPC 上需要带外拷贝该快照，或按 [data/README.md](data/README.md) 重建
+`data/processed/`。入库的 `artifacts/qwen_training_data_v3.json` 记录 SHA-256，
+launcher 解包前会校验。详见 [docs/qwen_hpc_training.md](docs/qwen_hpc_training.md)。
 
 ## 翻译文档
 

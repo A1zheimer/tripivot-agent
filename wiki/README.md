@@ -54,7 +54,7 @@ translation-agent translate \
 | 位置 | 内容 | 备注 |
 |---|---|---|
 | [src/translation_agent/](../src/translation_agent/) | 核心包，10 个模块（含 ingestion 前置归一化） | 各模块职责见[架构总览](./02-architecture.md) |
-| [tests/test_core.py](../tests/test_core.py) | 31 个 pytest 用例 | 覆盖面与空白见[测试与现状](./05-testing-and-status.md) |
+| [tests/test_core.py](../tests/test_core.py) | 32 个 pytest 用例 | 覆盖面与空白见[测试与现状](./05-testing-and-status.md) |
 | [data/seeds/](../data/seeds/) | 人工种子术语表 `glossary.tsv`（18 条） | confidence 1.0，仅用于打通链路 |
 | [data/raw/](../data/raw/) | 原始与中间缓存：ALT 归档、维基段落、蒸馏缓存 | 可删除后离线重建 |
 | [data/processed/](../data/processed/) | 成品数据（2026-08-18 重蒸馏后约 17.7 万行 JSONL）+ manifest | **唯一权威数据源** |

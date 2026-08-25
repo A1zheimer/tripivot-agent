@@ -1,12 +1,15 @@
 # Qwen training artifact
 
 `qwen_training_data_v3.tar.gz` is a self-contained 31 MB training snapshot for the
-Qwen-only LoRA run. It exists so the training data can move to an HPC node as a single
+Qwen-only LoRA run. It exists so the dataset can move to an HPC node as a single
 checksummed file instead of 211 MB of loose JSONL.
 
-The archives themselves are not in Git (`artifacts/*.tar.gz` is ignored); only these
-JSON manifests are, and each one records the SHA-256 of its archive. Copy an archive in
-out of band, or rebuild `data/processed/` using [../data/README.md](../data/README.md).
+It is an optional convenience, not a requirement: `data/processed/` is tracked in Git,
+so a clone already has the data and the launcher skips extraction. The archives
+themselves are not tracked (`artifacts/*.tar.gz` is ignored) because they are entirely
+derived from `data/processed/`; only these JSON manifests are, and each records the
+SHA-256 of its archive. Repacking instructions are in
+[../data/README.md](../data/README.md).
 
 Contents:
 

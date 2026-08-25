@@ -105,13 +105,15 @@ counts, tokenization counts, runtime, train metrics, and generation metrics.
 
 ## Dataset artifact
 
-Processed JSONL files are ignored by Git, and so is the 31 MB archive
-`artifacts/qwen_training_data_v3.tar.gz`. A fresh clone therefore carries no training
-data. Either copy the archive into `artifacts/` out of band, or rebuild
-`data/processed/` with the commands in [../data/README.md](../data/README.md). The
-archive's SHA-256 is tracked in `artifacts/qwen_training_data_v3.json` and verified by
-the launcher before extraction; if neither the data nor the archive is present, the
-launcher exits with an error instead of training on an empty dataset.
+`data/processed/` is tracked in Git, so a fresh clone already carries the training data
+and the launcher's extraction step is skipped. See
+[../data/README.md](../data/README.md) for the file inventory and refresh commands.
+
+The `artifacts/*.tar.gz` snapshots are not tracked; they are an optional way to move the
+dataset as one checksummed file. If an archive is present and
+`data/processed/zh-en.tech.jsonl` is not, the launcher verifies its SHA-256 against the
+tracked JSON manifest and extracts it. If neither the data nor an archive is present, it
+exits with an error instead of training on an empty dataset.
 
 If the bilingual corpus changes materially, create a new versioned artifact rather than
 overwriting the released one.

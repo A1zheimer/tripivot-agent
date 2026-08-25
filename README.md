@@ -64,7 +64,7 @@ data/processed/
 
 每个双语 manifest 记录下载 URL、OPUS 元数据、压缩包 SHA-256、原始/接收/去重/各类拒绝数量。中缅两个数据集按照中文枢纽句的哈希切分，防止三语对齐后跨训练集和测试集泄漏。
 
-`data/processed/*.jsonl` 成品语料（约 211MB）与 `data/raw/` 缓存不入库，仓库只保留 manifest、构建摘要和小体积术语库。入库范围与逐步重建命令见 [data/README.md](data/README.md)。
+`data/processed/` 成品语料（约 211MB）与 `data/seeds/` 已入库，克隆后即可直接训练评测，无需重跑数小时的采集与蒸馏；`data/raw/` 的原始下载与蒸馏缓存（约 129MB）不入库，可按命令离线重建。各文件的数量、体积与重建命令见 [data/README.md](data/README.md)。
 
 默认选择 ALT，是因为它同时覆盖英语、简体中文和缅甸语，语料翻译部分由 NICT 以 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 发布。数据不是本仓库代码许可证的一部分；使用时仍应保留 manifest 中的来源和署名信息。
 
@@ -119,10 +119,9 @@ sbatch scripts/qwen_lora_sbatch.sh
 ```
 
 默认使用 `Qwen/Qwen2.5-7B-Instruct`、四个双语方向、18 条人工术语、2 epochs LoRA，
-并自动断点续跑。训练数据打包为 `artifacts/qwen_training_data_v3.tar.gz`（约 32MB，
-不入库）：HPC 上需要带外拷贝该快照，或按 [data/README.md](data/README.md) 重建
-`data/processed/`。入库的 `artifacts/qwen_training_data_v3.json` 记录 SHA-256，
-launcher 解包前会校验。详见 [docs/qwen_hpc_training.md](docs/qwen_hpc_training.md)。
+并自动断点续跑。训练数据直接来自入库的 `data/processed/`，克隆后即可开跑；
+`artifacts/*.tar.gz` 打包快照只是可选的搬运方式（本身不入库，SHA-256 记在同名 JSON
+manifest 里）。详见 [docs/qwen_hpc_training.md](docs/qwen_hpc_training.md)。
 
 ## 翻译文档
 

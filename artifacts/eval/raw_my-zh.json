@@ -1,0 +1,11 @@
+{
+  "tag": "raw",
+  "direction": "my-zh",
+  "n": 233,
+  "comet": 0.6849,
+  "bleu": 0.0433,
+  "comet_qe": 0.6849,
+  "chrfpp": 0.1132,
+  "len_ratio": 0.849,
+  "degenerate_rate": 0.0
+}

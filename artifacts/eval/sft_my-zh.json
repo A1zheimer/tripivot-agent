@@ -1,0 +1,11 @@
+{
+  "tag": "sft",
+  "direction": "my-zh",
+  "n": 233,
+  "comet": 0.7617,
+  "bleu": 0.0354,
+  "comet_qe": 0.7617,
+  "chrfpp": 0.1836,
+  "len_ratio": 1.379,
+  "degenerate_rate": 0.0172
+}

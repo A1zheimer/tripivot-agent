@@ -1,0 +1,11 @@
+{
+  "tag": "opd",
+  "direction": "en-zh",
+  "n": 252,
+  "comet": 0.7984,
+  "bleu": 0.0212,
+  "comet_qe": 0.7984,
+  "chrfpp": 0.2581,
+  "len_ratio": 0.737,
+  "degenerate_rate": 0.0
+}

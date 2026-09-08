@@ -1,0 +1,11 @@
+{
+  "tag": "grpo",
+  "direction": "en-zh",
+  "n": 252,
+  "comet": 0.7927,
+  "bleu": 0.0627,
+  "comet_qe": 0.7927,
+  "chrfpp": 0.2622,
+  "len_ratio": 1.223,
+  "degenerate_rate": 0.0317
+}

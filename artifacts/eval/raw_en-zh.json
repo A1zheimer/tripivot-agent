@@ -1,0 +1,11 @@
+{
+  "tag": "raw",
+  "direction": "en-zh",
+  "n": 252,
+  "comet": 0.7935,
+  "bleu": 0.0469,
+  "comet_qe": 0.7935,
+  "chrfpp": 0.2419,
+  "len_ratio": 0.72,
+  "degenerate_rate": 0.0
+}

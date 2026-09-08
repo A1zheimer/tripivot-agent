@@ -36,3 +36,4 @@ artifacts/*.tar.gz
 
 # 汇报快照与可再生成的打包产物不入库
 deliverables/
+scripts/overnight_upload_modelscope.py  # contains ModelScope token

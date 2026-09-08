@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tripivot 翻译演示 · OPD vs GRPO</title>
+<style>
+  :root {
+    --bg: #0f1115; --panel: #181b22; --line: #262a34;
+    --text: #e8eaf0; --dim: #9aa1b2; --accent: #4f8cff;
+    --opd: #38bdf8; --grpo: #f472b6; --base: #a3e635;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+  header {
+    padding: 22px 28px 14px; border-bottom: 1px solid var(--line);
+    display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+  }
+  header h1 { font-size: 20px; margin: 0; }
+  header .sub { color: var(--dim); font-size: 13px; }
+  .backend-badge {
+    margin-left: auto; font-size: 12px; color: var(--dim);
+    border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px;
+  }
+  main { max-width: 1280px; margin: 0 auto; padding: 22px 26px 60px; }
+  .controls {
+    display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 14px;
+  }
+  select, button, textarea {
+    background: var(--panel); color: var(--text); border: 1px solid var(--line);
+    border-radius: 10px; padding: 10px 14px; font-size: 14px; outline: none;
+  }
+  button.primary { background: var(--accent); border-color: var(--accent); cursor: pointer; font-weight: 600; }
+  button.primary:disabled { opacity: .5; cursor: wait; }
+  .presets { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .preset {
+    font-size: 12px; color: var(--dim); border: 1px dashed var(--line);
+    border-radius: 999px; padding: 4px 12px; cursor: pointer;
+  }
+  .preset:hover { color: var(--text); border-color: var(--accent); }
+  textarea { width: 100%; min-height: 120px; resize: vertical; line-height: 1.6; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 16px; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+    padding: 16px; min-height: 180px; position: relative;
+  }
+  .card .tag {
+    font-size: 12px; font-weight: 700; letter-spacing: .5px;
+    display: inline-flex; align-items: center; gap: 6px; margin-bottom: 10px;
+  }
+  .dot { width: 9px; height: 9px; border-radius: 50%; }
+  .card.base .dot { background: var(--base); } .card.base { border-top: 3px solid var(--base); }
+  .card.opd  .dot { background: var(--opd); }  .card.opd  { border-top: 3px solid var(--opd); }
+  .card.grpo .dot { background: var(--grpo); } .card.grpo { border-top: 3px solid var(--grpo); }
+  .card .out { font-size: 15px; line-height: 1.8; white-space: pre-wrap; }
+  .card .meta { position: absolute; top: 14px; right: 14px; font-size: 12px; color: var(--dim); }
+  .hl { background: rgba(79, 140, 255, .25); border-radius: 4px; padding: 0 3px; }
+  .empty { color: var(--dim); font-size: 14px; }
+  footer { color: var(--dim); font-size: 12px; text-align: center; padding: 18px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>tripivot 多语翻译</h1>
+  <span class="sub">my / zh / en · SFT → OPD / GRPO 后训练对比</span>
+  <span class="backend-badge" id="backend">…</span>
+</header>
+<main>
+  <div class="controls">
+    <select id="src">
+      <option value="en">英语 →</option>
+      <option value="zh">中文 →</option>
+      <option value="my">缅甸语 →</option>
+    </select>
+    <select id="tgt">
+      <option value="zh" selected>中文</option>
+      <option value="en">英语</option>
+      <option value="my">缅甸语</option>
+    </select>
+    <button class="primary" id="go">翻译对比</button>
+  </div>
+  <div class="presets" id="presets"></div>
+  <textarea id="input" placeholder="输入或选择示例文本…"></textarea>
+  <div class="grid">
+    <div class="card base">
+      <span class="tag"><span class="dot"></span>SFT 基线</span>
+      <span class="meta" id="meta-baseline"></span>
+      <div class="out empty" id="out-baseline">等待翻译…</div>
+    </div>
+    <div class="card opd">
+      <span class="tag"><span class="dot"></span>OPD（教师蒸馏）</span>
+      <span class="meta" id="meta-opd"></span>
+      <div class="out empty" id="out-opd">等待翻译…</div>
+    </div>
+    <div class="card grpo">
+      <span class="tag"><span class="dot"></span>GRPO（指标奖励 RL）</span>
+      <span class="meta" id="meta-grpo"></span>
+      <div class="out empty" id="out-grpo">等待翻译…</div>
+    </div>
+  </div>
+</main>
+<footer>tripivot-agent · Qwen2.5-7B LoRA · HKUST(GZ) HPC2</footer>
+<script>
+const PRESETS = [
+  ["科技·GPT", "The new inference engine reduces latency by 40% while keeping accuracy."],
+  ["国际·气候", "The two countries agreed to strengthen cooperation on climate adaptation."],
+  ["财经·利率", "The central bank raised its policy rate by 25 basis points."],
+];
+const $ = (id) => document.getElementById(id);
+fetch("/api/health").then(r => r.json()).then(h => {
+  $("backend").textContent = h.backend === "mlx" ? "本地模型 · 在线推理" : "缓存模式 · 预计算结果";
+});
+const presetBox = $("presets");
+PRESETS.forEach(([name, text]) => {
+  const el = document.createElement("span");
+  el.className = "preset"; el.textContent = name;
+  el.onclick = () => { $("input").value = text; };
+  presetBox.appendChild(el);
+});
+function escapeHtml(s) {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+$("go").onclick = async () => {
+  const text = $("input").value.trim();
+  if (!text) return;
+  $("go").disabled = true;
+  for (const v of ["baseline", "opd", "grpo"]) {
+    $("out-" + v).textContent = "翻译中…"; $("out-" + v).className = "out empty";
+    $("meta-" + v).textContent = "";
+  }
+  try {
+    const res = await fetch("/api/translate", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text, source: $("src").value, target: $("tgt").value }),
+    });
+    const data = await res.json();
+    for (const [v, out] of Object.entries(data.results)) {
+      $("out-" + v).innerHTML = escapeHtml(out);
+      $("out-" + v).className = "out";
+      $("meta-" + v).textContent = data.latencies[v] + "s";
+    }
+  } catch (e) {
+    for (const v of ["baseline", "opd", "grpo"]) $("out-" + v).textContent = "请求失败: " + e;
+  } finally { $("go").disabled = false; }
+};
+</script>
+</body>
+</html>

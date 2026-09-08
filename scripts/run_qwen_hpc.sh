@@ -67,9 +67,9 @@ PYTHON="$PYTHON_BIN"
 if [[ "$INSTALL_DEPENDENCIES" == "1" ]]; then
   if [[ "$INSTALL_TORCH" == "1" ]]; then
     if [[ -n "$TORCH_INDEX_URL" ]]; then
-      "$PYTHON" -m pip install --index-url "$TORCH_INDEX_URL" torch
+      "$PYTHON" -m pip install --index-url "$TORCH_INDEX_URL" ${TORCH_SPEC:-torch}
     else
-      "$PYTHON" -m pip install torch
+      "$PYTHON" -m pip install ${TORCH_SPEC:-torch}
     fi
   fi
   echo "[setup] Installing project training dependencies"

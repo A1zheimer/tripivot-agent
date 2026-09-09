@@ -158,7 +158,6 @@
     <div class="sub">文档规划 · 术语约束 · 分层翻译 · 审计修订 · 情景记忆</div>
   </div>
   <div class="lang-chips"><span>my</span><span>zh</span><span>en</span></div>
-  <span class="badge" id="backend">…</span>
 </header>
 <main>
   <div class="composer">
@@ -219,11 +218,6 @@ $("file").onchange = (e) => {
   reader.onload = () => { $("input").value = reader.result; };
   reader.readAsText(f);
 };
-fetch("/api/health").then(r => r.json()).then(h => {
-  $("backend").innerHTML = h.backend === "api"
-    ? "API 模式 · <b>Agent 流程实时演示</b>"
-    : (h.backend === "mlx" ? "本地模型 · <b>在线推理</b>" : "部署演示 · <b>真实译文回放</b>");
-});
 fetch("/api/presets").then(r => r.json()).then(d => {
   const names = { "en-zh": "英→中", "zh-en": "中→英", "zh-my": "中→缅", "my-zh": "缅→中" };
   const box = $("presets");

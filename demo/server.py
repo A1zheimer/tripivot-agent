@@ -122,6 +122,24 @@ class ApiBackend:
         return retry
 
 
+DOMAIN_KEYWORDS = {
+    "tech": ["computer", "software", "network", "apple", "internet", "system",
+             "ai ", "data", "digital", "算法", "系统", "软件", "网络", "苹果", "数据"],
+    "finance": ["bank", "stock", "market", "loan", "fiscal", "trade", "invest",
+                "银行", "股", "市场", "贷款", "财政", "投资", "经济"],
+    "intl": ["president", "election", "country", "united nations", "government",
+             "policy", "minister", "总统", "选举", "联合国", "政府", "外交", "部长"],
+}
+
+
+def guess_domain(text: str) -> str:
+    t = text.lower()
+    for dom, kws in DOMAIN_KEYWORDS.items():
+        if any(k in t for k in kws):
+            return dom
+    return "general"
+
+
 class CachedBackend:
     def __init__(self):
         with open(CACHE_PATH) as f:
@@ -213,7 +231,12 @@ def main():
                 ratio = len(fin) / max(1, len(src))
                 if not (0.5 <= ratio <= 1.6) or len(fin) < 150:
                     continue
-                by_pair[key] = it
+                dom = it.get("domain") or guess_domain(src)
+                entry = {**it, "domain": dom}
+                if key not in by_pair:
+                    by_pair[key] = entry
+                elif by_pair[key]["domain"] == "general" and dom != "general":
+                    by_pair[key] = entry  # upgrade generic news to a domain item
         return {"presets": [
             {"text": by_pair[k]["source_text"][:1200], "source": k[0], "target": k[1]}
             for k in pairs if k in by_pair

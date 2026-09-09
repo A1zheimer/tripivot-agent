@@ -263,11 +263,12 @@ $("go").onclick = async () => {
 
   resetPipeline();
   const stageEls = document.querySelectorAll(".stage");
+  const factor = text.length > 500 ? 1.8 : 1.0;  // whole documents take longer
   for (let i = 0; i < STAGES.length; i++) {
     stageEls[i].classList.add("active");
     $("status").textContent = "▍ " + STAGES[i].label;
     $("status").className = "status live";
-    await sleep(STAGES[i].ms);
+    await sleep(STAGES[i].ms * factor);
     stageEls[i].classList.remove("active");
     stageEls[i].classList.add("done");
     if (i === 4) {  // reveal the final translation after targeted revision

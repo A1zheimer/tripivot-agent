@@ -231,13 +231,13 @@ fetch("/api/health").then(r => r.json()).then(h => {
     : (h.backend === "mlx" ? "本地模型 · <b>在线推理</b>" : "部署演示 · <b>真实译文回放</b>");
 });
 fetch("/api/presets").then(r => r.json()).then(d => {
-  const names = { zh: "英→中", my: "中→缅", en: "中→英" };
+  const names = { "en-zh": "英→中", "zh-en": "中→英", "zh-my": "中→缅", "my-zh": "缅→中" };
   const box = $("presets");
   (d.presets || []).forEach((p, i) => {
     const el = document.createElement("span");
     el.className = "preset";
-    const pair = names[p.target] || "示例";
-    el.textContent = `示例${i + 1}（${pair}）· ${p.text.slice(0, 18)}…`;
+    const pair = names[p.source + "-" + p.target] || "示例";
+    el.textContent = `${pair} · ${p.text.slice(0, 20)}…`;
     el.title = p.text;
     el.onclick = () => {
       $("input").value = p.text;

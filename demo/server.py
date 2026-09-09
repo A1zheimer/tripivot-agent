@@ -199,25 +199,25 @@ def main():
 
     @app.get("/api/presets")
     def presets():
-        """Pick one clean example per language pair (incl. Burmese)."""
-        out = []
+        """One clean medium-length example per direction (all four pairs)."""
+        pairs = [("en", "zh"), ("zh", "en"), ("zh", "my"), ("my", "zh")]
+        by_pair = {}
         if os.path.exists(CACHE_PATH):
-            items = json.load(open(CACHE_PATH)).get("items", [])
-            seen = set()
-            for it in items:
-                tgt = it.get("target_language", "zh")
-                src_lang = {"zh": "en", "my": "zh", "en": "zh"}.get(tgt, "en")
-                if len(it["source_text"]) > 500 or tgt in seen:
+            for it in json.load(open(CACHE_PATH)).get("items", []):
+                key = (it.get("source_language", "en"), it.get("target_language", "zh"))
+                if key not in pairs or key in by_pair:
                     continue
-                if not it.get("final") or len(it["final"]) < 30:
+                src, fin = it["source_text"], it.get("final", "")
+                if not fin or not (80 <= len(src) <= 400):
                     continue
-                seen.add(tgt)
-                out.append({"text": it["source_text"][:400],
-                            "source": src_lang, "target": tgt})
-                if len(seen) == 3:
-                    break
-        return {"presets": out or [{"text": "Translate demo", "source": "en",
-                                    "target": "zh"}]}
+                ratio = len(fin) / max(1, len(src))
+                if not (0.5 <= ratio <= 1.6) or len(fin) < 50:
+                    continue
+                by_pair[key] = it
+        return {"presets": [
+            {"text": by_pair[k]["source_text"][:400], "source": k[0], "target": k[1]}
+            for k in pairs if k in by_pair
+        ]}
 
     @app.post("/api/translate")
     def translate(req: TranslateRequest):

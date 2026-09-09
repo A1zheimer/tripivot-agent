@@ -107,7 +107,17 @@
 <script>
 const $ = (id) => document.getElementById(id);
 fetch("/api/health").then(r => r.json()).then(h => {
-  $("backend").textContent = h.backend === "mlx" ? "本地模型 · 在线推理" : "缓存模式 · 预计算结果";
+  $("backend").textContent = h.backend === "api" ? "API 模式 · Agent 流程实时演示"
+    : (h.backend === "mlx" ? "本地模型 · 在线推理" : "缓存模式 · 预计算结果");
+  const tags = document.querySelectorAll(".card .tag");
+  (h.labels || []).forEach((label, i) => {
+    if (tags[i]) {
+      const dot = tags[i].querySelector(".dot");
+      tags[i].textContent = "";
+      tags[i].appendChild(dot);
+      tags[i].appendChild(document.createTextNode(label));
+    }
+  });
 });
 fetch("/api/presets").then(r => r.json()).then(d => {
   const presetBox = $("presets");

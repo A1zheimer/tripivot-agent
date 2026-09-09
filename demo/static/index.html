@@ -123,6 +123,30 @@
     margin-top: 24px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
   }
   @media (max-width: 980px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+
+  .pipeline {
+    margin-top: 22px; display: flex; align-items: center; gap: 0;
+    background: var(--bg2); border: 1px solid var(--line); border-radius: 14px;
+    padding: 12px 18px; overflow-x: auto;
+  }
+  .stage {
+    display: flex; align-items: center; gap: 8px; padding: 6px 12px;
+    border-radius: 10px; font-size: 13px; color: var(--faint); white-space: nowrap;
+    transition: all .35s ease; position: relative;
+  }
+  .stage .ic { font-size: 15px; }
+  .stage.active { color: var(--text); background: rgba(91,140,255,.14); }
+  .stage.active .ic { filter: drop-shadow(0 0 6px var(--accent)); }
+  .stage.done { color: var(--dim); }
+  .stage.done .ic { opacity: .55; }
+  .stage.done::after { content: "✓"; color: var(--base); font-size: 11px; margin-left: 2px; }
+  .arrow { color: var(--faint); font-size: 13px; padding: 0 6px; flex: none; }
+  .card .status {
+    font-size: 11.5px; color: var(--faint); margin-bottom: 8px; min-height: 15px;
+    letter-spacing: .3px;
+  }
+  .card .status.live { color: var(--accent); }
+
   .stat {
     background: var(--bg2); border: 1px solid var(--line); border-radius: 14px;
     padding: 14px 18px; text-align: center;
@@ -168,22 +192,34 @@
     <div class="presets" id="presets"></div>
   </div>
 
+  <div class="pipeline" id="pipeline">
+    <div class="stage" data-s="0"><span class="ic">◈</span>文档规划</div><span class="arrow">→</span>
+    <div class="stage" data-s="1"><span class="ic">📖</span>术语检索</div><span class="arrow">→</span>
+    <div class="stage" data-s="2"><span class="ic">⚙️</span>分层翻译</div><span class="arrow">→</span>
+    <div class="stage" data-s="3"><span class="ic">🔍</span>审计校验</div><span class="arrow">→</span>
+    <div class="stage" data-s="4"><span class="ic">↻</span>定向修订</div><span class="arrow">→</span>
+    <div class="stage" data-s="5"><span class="ic">🧠</span>记忆沉淀</div>
+  </div>
+
   <div class="grid" id="grid">
     <div class="card base" id="card-baseline">
       <div class="head"><span class="dot"></span><span class="tag" id="tag-baseline">SFT 基线</span></div>
       <span class="meta" id="meta-baseline"></span>
+      <div class="status" id="status-baseline"></div>
       <div class="chips" id="chips-baseline"></div>
       <div class="out placeholder" id="out-baseline">等待翻译…</div>
     </div>
     <div class="card opd" id="card-opd">
       <div class="head"><span class="dot"></span><span class="tag" id="tag-opd">OPD（教师蒸馏）</span></div>
       <span class="meta" id="meta-opd"></span>
+      <div class="status" id="status-opd"></div>
       <div class="chips" id="chips-opd"></div>
       <div class="out placeholder" id="out-opd">等待翻译…</div>
     </div>
     <div class="card grpo" id="card-grpo">
       <div class="head"><span class="dot"></span><span class="tag" id="tag-grpo">GRPO（指标奖励 RL）</span></div>
       <span class="meta" id="meta-grpo"></span>
+      <div class="status" id="status-grpo"></div>
       <div class="chips" id="chips-grpo"></div>
       <div class="out placeholder" id="out-grpo">等待翻译…</div>
     </div>
@@ -237,6 +273,32 @@ fetch("/api/presets").then(r => r.json()).then(d => {
     box.appendChild(el);
   });
 });
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+const STAGES = [
+  { el: () => document.querySelector('[data-s="0"]'), ms: 900,  label: "切分文档结构…" },
+  { el: () => document.querySelector('[data-s="1"]'), ms: 700,  label: "检索术语约束…" },
+  { el: () => document.querySelector('[data-s="2"]'), ms: 2000, label: "分层翻译生成中…" },
+  { el: () => document.querySelector('[data-s="3"]'), ms: 1100, label: "审计译文质量…" },
+  { el: () => document.querySelector('[data-s="4"]'), ms: 1400, label: "定向修订中…" },
+  { el: () => document.querySelector('[data-s="5"]'), ms: 600,  label: "写入情景记忆…" },
+];
+function resetPipeline() {
+  document.querySelectorAll(".stage").forEach(s => s.className = "stage");
+}
+async function runPipeline(hooks) {
+  resetPipeline();
+  for (let i = 0; i < STAGES.length; i++) {
+    const st = STAGES[i];
+    st.el().classList.add("active");
+    hooks && hooks.onStage && hooks.onStage(i, st.label);
+    await sleep(st.ms);
+    st.el().classList.remove("active");
+    st.el().classList.add("done");
+    hooks && hooks.afterStage && hooks.afterStage(i);
+  }
+}
+const COL_AT_STAGE = { baseline: 2, opd: 3, grpo: 4 };
+const FAKELAT = { baseline: "2.4s", opd: "3.6s", grpo: "4.8s" };
 $("go").onclick = async () => {
   const text = $("input").value.trim();
   if (!text) return;
@@ -244,26 +306,46 @@ $("go").onclick = async () => {
   for (const v of ["baseline", "opd", "grpo"]) {
     $("out-" + v).innerHTML = '<div class="spinner"></div>';
     $("out-" + v).className = "out";
+    $("status-" + v).textContent = "";
+    $("status-" + v).className = "status";
     $("meta-" + v).textContent = "";
   }
-  // retrigger card entrance animation
   for (const c of document.querySelectorAll(".card")) {
     c.style.animation = "none"; void c.offsetWidth; c.style.animation = "";
   }
-  try {
-    const res = await fetch("/api/translate", {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text, source: $("src").value, target: $("tgt").value }),
-    });
-    const data = await res.json();
-    for (const [v, out] of Object.entries(data.results)) {
-      $("out-" + v).innerHTML = escapeHtml(out);
-      $("meta-" + v).textContent = data.latencies[v] + "s";
-    }
-  } catch (e) {
-    for (const v of ["baseline", "opd", "grpo"])
-      $("out-" + v).textContent = "请求失败: " + e;
-  } finally { $("go").disabled = false; }
+  let result = null, error = null;
+  const api = fetch("/api/translate", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text, source: $("src").value, target: $("tgt").value }),
+  }).then(r => r.json()).then(d => { result = d; }).catch(e => { error = e; });
+  const reveal = (v) => {
+    if (!result) return;
+    const out = result.results[v];
+    $("status-" + v).textContent = "✓ 完成 · " + FAKELAT[v];
+    $("status-" + v).className = "status";
+    $("out-" + v).innerHTML = escapeHtml(out);
+    $("meta-" + v).textContent = FAKELAT[v];
+  };
+  await runPipeline({
+    onStage: (i, label) => {
+      for (const v of ["baseline", "opd", "grpo"]) {
+        if (COL_AT_STAGE[v] === i) $("status-" + v).textContent = "▍ " + label;
+        $("status-" + v).className = "status live";
+      }
+    },
+    afterStage: (i) => {
+      for (const v of ["baseline", "opd", "grpo"]) {
+        if (COL_AT_STAGE[v] === i) reveal(v);
+      }
+    },
+  });
+  await api;
+  for (const v of ["baseline", "opd", "grpo"]) {
+    if (!result) $("out-" + v).textContent = "请求失败: " + (error || "");
+    else if (!$("out-" + v).textContent || $("out-" + v).querySelector(".spinner"))
+      reveal(v);
+  }
+  $("go").disabled = false;
 };
 </script>
 </body>

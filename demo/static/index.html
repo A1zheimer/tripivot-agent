@@ -105,21 +105,19 @@
 </main>
 <footer>tripivot-agent · Qwen2.5-7B LoRA · HKUST(GZ) HPC2</footer>
 <script>
-const PRESETS = [
-  ["科技·GPT", "The new inference engine reduces latency by 40% while keeping accuracy."],
-  ["国际·气候", "The two countries agreed to strengthen cooperation on climate adaptation."],
-  ["财经·利率", "The central bank raised its policy rate by 25 basis points."],
-];
 const $ = (id) => document.getElementById(id);
 fetch("/api/health").then(r => r.json()).then(h => {
   $("backend").textContent = h.backend === "mlx" ? "本地模型 · 在线推理" : "缓存模式 · 预计算结果";
 });
-const presetBox = $("presets");
-PRESETS.forEach(([name, text]) => {
-  const el = document.createElement("span");
-  el.className = "preset"; el.textContent = name;
-  el.onclick = () => { $("input").value = text; };
-  presetBox.appendChild(el);
+fetch("/api/presets").then(r => r.json()).then(d => {
+  const presetBox = $("presets");
+  (d.presets || []).slice(0, 4).forEach((p, i) => {
+    const el = document.createElement("span");
+    el.className = "preset"; el.textContent = "示例" + (i + 1) + " · " + p.text.slice(0, 24) + "…";
+    el.title = p.text;
+    el.onclick = () => { $("input").value = p.text; };
+    presetBox.appendChild(el);
+  });
 });
 function escapeHtml(s) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");

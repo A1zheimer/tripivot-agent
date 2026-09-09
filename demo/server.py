@@ -69,11 +69,13 @@ class CachedBackend:
     def __init__(self):
         with open(CACHE_PATH) as f:
             self.cache = json.load(f)
+        self.items = [it for it in self.cache.get("items", []) if it.get("source_text")]
 
     def generate(self, prompt_text: str, variant: str, **kw) -> str:
-        key = prompt_text.strip()[:200]
-        for item in self.cache.get("items", []):
-            if item["source_text"].strip()[:200] == key:
+        q = prompt_text.strip()[:180]
+        for item in self.items:
+            src = item["source_text"].strip()
+            if src.startswith(q) or q.startswith(src[:180]):
                 return item["translations"].get(variant, "")
         return "(缓存中无此句，请切换到 mlx 后端或补充 cache.json)"
 
@@ -121,6 +123,19 @@ def main():
     @app.get("/api/health")
     def health():
         return {"backend": mode, "variants": VARIANTS}
+
+    @app.get("/api/presets")
+    def presets():
+        if mode == "cached" and os.path.exists(CACHE_PATH):
+            items = json.load(open(CACHE_PATH)).get("items", [])
+            picks = [items[i] for i in (0, len(items) // 3, 2 * len(items) // 3, -1)
+                     if 0 <= i < len(items)]
+            return {"presets": [{"text": p["source_text"][:180]} for p in picks]}
+        return {"presets": [
+            {"text": "The new inference engine reduces latency by 40%."},
+            {"text": "The two countries agreed to strengthen climate cooperation."},
+            {"text": "The central bank raised its policy rate by 25 basis points."},
+        ]}
 
     @app.post("/api/translate")
     def translate(req: TranslateRequest):

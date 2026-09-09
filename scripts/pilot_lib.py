@@ -89,10 +89,12 @@ def score_comet(triples, device="cuda:1"):
     return model.predict(data, batch_size=32, gpus=1, progress_bar=False).scores
 
 
-def score_bleu(hyps, refs):
-    from sacrebleu.metrics import BLEU
-
-    bleu = BLEU()
+def score_bleu(hyps, refs, direction="en-zh"):
+    """BLEU with a target-language-aware tokenizer (13a does not segment
+    zh/my scripts and produces length-artifact numbers)."""
+    tgt = direction.split("-")[1]
+    tokenize = {"zh": "zh", "my": "char"}.get(tgt, "13a")  # char ≈ approximation for my
+    bleu = BLEU(tokenize=tokenize)
     return bleu.corpus_score(hyps, [refs]).score / 100.0
 
 
@@ -104,12 +106,11 @@ def score_chrf(hyps, refs):
 
 
 def reward_bundle(srcs, hyps, refs, comet_device="cuda:1"):
-    """Composite reward per (src, hyp, ref). chrF-primary (COMET is gated on
-    the hub; use it only if its cache dir already exists)."""
-    use_comet = os.path.exists(
-        os.path.join(ROOT, ".cache/huggingface/hub/models--Unbabel--wmt22-comet-qe-da"))
+    """Composite reward per (src, hyp, ref). chrF-primary; COMET only when the
+    reference-based model is present (path must match score_comet's)."""
+    use_comet = os.path.exists(os.path.join(COMET_LOCAL, "checkpoints"))
     comet = (
-        score_comet(list(zip(srcs, hyps)), device=comet_device)
+        score_comet(list(zip(srcs, hyps, refs)), device=comet_device)
         if use_comet else [0.0] * len(hyps)
     )
     chrf = score_chrf(hyps, refs)

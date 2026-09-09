@@ -1,0 +1,26 @@
+{
+  "bleu_zh_smoothed_opd_vs_baseline": {
+    "mean_candidate": 0.2715,
+    "mean_baseline": 0.2751,
+    "p_value": 0.666,
+    "significant_at_0.05": false
+  },
+  "bleu_zh_smoothed_grpo_vs_baseline": {
+    "mean_candidate": 0.2817,
+    "mean_baseline": 0.2751,
+    "p_value": 0.465,
+    "significant_at_0.05": false
+  },
+  "chrfpp_opd_vs_baseline": {
+    "mean_candidate": 0.2581,
+    "mean_baseline": 0.2579,
+    "p_value": 0.966,
+    "significant_at_0.05": false
+  },
+  "chrfpp_grpo_vs_baseline": {
+    "mean_candidate": 0.2622,
+    "mean_baseline": 0.2579,
+    "p_value": 0.476,
+    "significant_at_0.05": false
+  }
+}

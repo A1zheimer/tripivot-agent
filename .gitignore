@@ -37,3 +37,11 @@ artifacts/*.tar.gz
 # 汇报快照与可再生成的打包产物不入库
 deliverables/
 scripts/overnight_upload_modelscope.py  # contains ModelScope token
+
+# local model artifacts (large, not for git)
+demo/base/
+demo/adapter_opd/
+demo/adapter_grpo/
+demo/models/
+demo/server.log
+demo/cache.json

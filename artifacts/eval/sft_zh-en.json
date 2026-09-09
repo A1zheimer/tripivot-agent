@@ -7,5 +7,8 @@
   "comet_qe": 0.7269,
   "chrfpp": 0.5651,
   "len_ratio": 1.788,
-  "degenerate_rate": 0.2209
+  "degenerate_rate": 0.2209,
+  "bleu_tok13a": 0.2132,
+  "bleu_tokenizer": "13a",
+  "chrfpp_corpus": 0.519
 }

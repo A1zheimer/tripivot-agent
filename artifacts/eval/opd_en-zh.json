@@ -3,9 +3,12 @@
   "direction": "en-zh",
   "n": 252,
   "comet": 0.7984,
-  "bleu": 0.0212,
+  "bleu": 0.2582,
   "comet_qe": 0.7984,
   "chrfpp": 0.2581,
   "len_ratio": 0.737,
-  "degenerate_rate": 0.0
+  "degenerate_rate": 0.0,
+  "bleu_tok13a": 0.0212,
+  "bleu_tokenizer": "zh",
+  "chrfpp_corpus": 0.2173
 }

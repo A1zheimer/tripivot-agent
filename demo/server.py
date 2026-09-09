@@ -218,7 +218,17 @@ def main():
 
     @app.get("/api/presets")
     def presets():
-        """One clean medium-length example per direction (all four pairs)."""
+        """Human-vetted examples first; heuristic fallback if file missing."""
+        curated = os.path.join(ROOT, "demo", "presets_curated.json")
+        if os.path.exists(curated):
+            items = json.load(open(curated)).get("presets", [])
+            if items:
+                return {"presets": [
+                    {"text": it["source_text"][:1200],
+                     "source": it["source_language"], "target": it["target_language"],
+                     "domain": it.get("domain", "general")}
+                    for it in items
+                ]}
         pairs = [("en", "zh"), ("zh", "en"), ("zh", "my"), ("my", "zh")]
         by_pair = {}
         if os.path.exists(CACHE_PATH):

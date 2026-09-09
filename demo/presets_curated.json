@@ -1,0 +1,32 @@
+{
+ "presets": [
+  {
+   "source_language": "en",
+   "target_language": "zh",
+   "source_text": "Adobe, formerly known as Adobe Systems, was founded in December 1982 by John Warnock and Charles Gschke, both formerly working at the Palo Alto Research Centre of Schulling, and left and built Adobe, which enabled the PostScript page to describe the commercial use of the language. The company’s name, Adobe, is from Los Atus, California, and the river is not far from the company’s office in Mountain View, California.",
+   "final": "Adobe，原名Adobe Systems，由约翰·沃诺克（John Warnock）和查尔斯·格斯克（Charles Geschke）于1982年12月创立，他们之前都在施乐帕洛阿尔托研究中心工作，离开后建立了Adobe，使PostScript页面描述语言的商业使用成为可能。公司的名字Adobe来自加利福尼亚州的Los Altos，那条河离加利福尼亚州山景城的公司办公室不远。",
+   "domain": "tech"
+  },
+  {
+   "source_language": "zh",
+   "target_language": "en",
+   "source_text": "在Mac OS X Leopard发布后的数小时内，OSx86社区很快跟进了内核的修改，发布了AMD/Intel SSE2/3的内核修补程序，它能从原始的mach_kernel文件（Mac OS核心组件之一）移除对高精度事件计时器（HPET）的要求。OS X Mavericks内核使用了SSSE3指令，开发者也发布了模拟SSSE3的破解内核。引导程序与EFI\n可延伸韌體介面（EFI），现名为統一可延伸韌體介面（UEFI），是一个介于操作系统与平台固件的软件接口。因为这种方法并不需要获取与修改macOS源文件，这被认为是在非苹果电脑上安装macOS的最佳合法途径。",
+   "final": "Within hours of the release of Mac OS X Leopard, the OSx86 community quickly followed up on the modification of the kernel, releasing the AMD/Intel SSE2/3 kernel patch, which removes the requirement for a high-precision event timer (HPET) from the original mach_kernel file (one of the Mac OS core components). The OS X Mavericks kernel uses the SSSE3 command, and the developer also releases a simulation of the SSSE3 kernel. The guide program and EFI can extend the interface (EFI), now known as the UEFI, is a software interface between the operating system and the platform.",
+   "domain": "tech"
+  },
+  {
+   "source_language": "zh",
+   "target_language": "my",
+   "source_text": "中國共產黨同時也提出中國共產黨領導的多黨合作和政治協商制度，也就是在中國共產黨領導下與8個民主黨派合作和協商，進而組成統一戰線。這些政治協商必須接受中國共產黨領導，主要參與成員還包括有群眾組織、民主黨派以及各個行業的代表。而在其政治制度理論上，透過正式協商制度能夠有助於中華人民共和國政治、經濟、文化和社會飾物等各個層面的基本政策成形。對此中國共產黨與其他政黨的互動關係，則主要建立在「長期共存、互相監督、肝膽相照、榮辱與共的方針」基礎上。中國共產黨還將這一協商過程制度化而成立中國人民政治協商會議，並且要求所有統一戰線成員支持中國的社會主義道路，並持續支持接受中國共產黨的領導。這使得一些人认为中國人民政治協商會議實際上並沒有任何權限，而有關的討論內容也都是受到中國共產黨所監督。",
+   "final": "တရုတ်ကွန်မြူနစ်ပါတီသည်လည်း တရုတ်ကွန်မြူနစ်ပါတီ ခေါင်းဆောင်သော ပါတီများ၏ ပူးပေါင်းဆောင်ရွက်မှုနှင့် နိုင်ငံရေးဆွေးနွေးမှုစနစ်ကို တင်ပြခဲ့သည်။ တရုတ်ကွန်မြူနစ်ပါတီ ခေါင်းဆောင်သော ပါတီ ၈ ခုနှင့် ပူးပေါင်းဆောင်ရွက်ခြင်းနှင့် ဆွေးနွေးခြင်းဖြင့် တစ်ကိုယ်ရေး တိုက်ပွဲတစ်ခု ဖွဲ့စည်းခြင်းဖြစ်သည်။ ထိုနိုင်ငံရေးဆွေးနွေးမှုများသည် တရုတ်ကွန်မြူနစ်ပါတီ ခေါင်းဆောင်မှ လက်ခံရမည့် အခြေခံမူများဖြစ်ပြီး အဓိက ပါဝင်သူများတွင် လူထုအဖွဲ့အစည်းများ၊ ဒီမိုကရေစီပါတီများနှင့် လုပ်ငန်းအမျိုးမျိုး၏ ကိုယ်စားလှယ်များ ပါဝင်သည်။ နိုင်ငံရေးစနစ် သီအိုရီအရ တရုတ်ပြည်သူ့သမ္မတနိုင်ငံ၏ နိုင်ငံရေး၊ စီးပွားရေး၊ ယဉ်ကျေးမှုနှင့် လူမှုရေးဆိုင်ရာ အရာရာများအတွက် အခြေခံမူများကို တည်ဆောက်နိုင်ရန် တရားဝင်ဆွေးနွေးမှ",
+   "domain": "intl"
+  },
+  {
+   "source_language": "my",
+   "target_language": "zh",
+   "source_text": "၂၀၀၁ ခုနှစ်၊ မတ်လ ၂၄ ရက်တွင် Apple က Mac OS X v10.0 ကို မိတ်ဆက်ခဲ့သည်။ ၎င်း၏ အစောပိုင်းထုတ်ပြန်ချက်များသည် အတော်နှေး၊ မပြည့်စုံသော လုပ်ဆောင်ချက်များနှင့် သီးခြားဖွံ့ဖြိုးသူများမှ software များသာရှိသည်။ အမြင်အများအပြားက ၎င်းသည် အရွယ်ရောက်သော လူသိများမှု ထုတ်ကုန်မဟုတ်သော်လည်း အလားအလာရှိသည့် ဖွံ့ဖြိုးရေး ပရောဂျက်တစ်ခုအဖြစ် မဆုံးရှုံးပါ။ Apple သည် Mac OS X ကို ၁၉၉၆ ခုနှစ်ကတည်းက ပြန်လည်ရေးဆွဲခဲ့သည်။",
+   "final": "2001年3月24日，苹果公司发布了Mac OS X v10.0。其早期版本的发布速度较慢，功能不完善，且只有少数独立开发者提供软件。尽管许多人认为它不是一款成熟的大众市场产品，但其仍不失为一个有前途的开发项目。苹果公司从1996年开始重新设计Mac OS X。在1997年，苹果公司宣布将开发一个全新的操作系统，以取代Mac OS。",
+   "domain": "tech"
+  }
+ ]
+}

@@ -148,13 +148,21 @@ class CachedBackend:
         self.items = [it for it in self.cache.get("items", []) if it.get("source_text")]
 
     def generate(self, prompt_text: str, variant: str, **kw) -> str:
-        q = prompt_text.strip()[:180]
+        q = prompt_text.strip()
+        # exact/prefix match first, then containment (uploaded doc wrapping a
+        # known paragraph, e.g. with a title line, still hits the cache)
+        best = None
         for item in self.items:
             src = item["source_text"].strip()
-            if src.startswith(q) or q.startswith(src[:180]):
-                if variant == "final":
-                    return item.get("final") or item["translations"].get("grpo", "")
-                return item["translations"].get(variant, "")
+            if src.startswith(q[:180]) or q.startswith(src[:180]):
+                best = item
+                break
+            if len(src) >= 120 and src in q:
+                best = item
+        if best:
+            if variant == "final":
+                return best.get("final") or best.get("translations", {}).get("grpo", "")
+            return best.get("translations", {}).get(variant, "")
         return "(缓存中无此句，请使用示例或上传文档中的段落)"
 
 

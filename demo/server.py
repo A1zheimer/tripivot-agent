@@ -208,14 +208,14 @@ def main():
                 if key not in pairs or key in by_pair:
                     continue
                 src, fin = it["source_text"], it.get("final", "")
-                if not fin or not (80 <= len(src) <= 400):
+                if not fin or not (300 <= len(src) <= 1200):
                     continue
                 ratio = len(fin) / max(1, len(src))
-                if not (0.5 <= ratio <= 1.6) or len(fin) < 50:
+                if not (0.5 <= ratio <= 1.6) or len(fin) < 150:
                     continue
                 by_pair[key] = it
         return {"presets": [
-            {"text": by_pair[k]["source_text"][:400], "source": k[0], "target": k[1]}
+            {"text": by_pair[k]["source_text"][:1200], "source": k[0], "target": k[1]}
             for k in pairs if k in by_pair
         ]}
 

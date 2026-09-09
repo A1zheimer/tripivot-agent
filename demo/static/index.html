@@ -201,12 +201,6 @@
     <div class="out placeholder" id="out">等待翻译…</div>
   </div>
 
-  <div class="stats">
-    <div class="stat"><div class="num n1">+42%</div><div class="lbl">缅向 COMET（SFT vs 原版）</div></div>
-    <div class="stat"><div class="num n2">+76%</div><div class="lbl">缅向 BLEU（修正分词）</div></div>
-    <div class="stat"><div class="num n3">+62%</div><div class="lbl">my→zh chrF++</div></div>
-    <div class="stat"><div class="num n4">×10</div><div class="lbl">Agent 审计一次通过率</div></div>
-  </div>
 </main>
 <footer>
   <b>Qwen2.5-7B · LoRA</b> · HKUST(GZ) HPC2 训练 · 权重已发布 ModelScope ·
@@ -236,8 +230,7 @@ fetch("/api/presets").then(r => r.json()).then(d => {
   (d.presets || []).forEach((p, i) => {
     const el = document.createElement("span");
     el.className = "preset";
-    const pair = names[p.source + "-" + p.target] || "示例";
-    el.textContent = `${pair} · ${p.text.slice(0, 20)}…`;
+    el.textContent = `案例 ${i + 1} · ${p.text.slice(0, 22)}…`;
     el.title = p.text;
     el.onclick = () => {
       $("input").value = p.text;
@@ -248,12 +241,12 @@ fetch("/api/presets").then(r => r.json()).then(d => {
   });
 });
 const STAGES = [
-  { ms: 900,  label: "切分文档结构…" },
-  { ms: 700,  label: "检索术语约束…" },
-  { ms: 2000, label: "分层翻译生成中…" },
-  { ms: 1100, label: "审计译文质量…" },
-  { ms: 1400, label: "定向修订中…" },
-  { ms: 600,  label: "写入情景记忆…" },
+  { ms: 1600, label: "切分文档结构…" },
+  { ms: 1300, label: "检索术语约束…" },
+  { ms: 3800, label: "分层翻译生成中…" },
+  { ms: 2000, label: "审计译文质量…" },
+  { ms: 2600, label: "定向修订中…" },
+  { ms: 1200, label: "写入情景记忆…" },
 ];
 function resetPipeline() {
   document.querySelectorAll(".stage").forEach(s => s.className = "stage");

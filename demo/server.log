@@ -1,8 +1,7 @@
-INFO:     Started server process [40772]
+INFO:     Started server process [41049]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://127.0.0.1:7860 (Press CTRL+C to quit)
 [demo] no models under demo/models/; falling back to cache
-INFO:     127.0.0.1:62108 - "GET /api/presets HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62109 - "GET /api/presets HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62110 - "POST /api/translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63152 - "GET /api/presets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63153 - "GET / HTTP/1.1" 200 OK

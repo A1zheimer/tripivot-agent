@@ -128,7 +128,8 @@ DOMAIN_KEYWORDS = {
     "finance": ["bank", "stock", "market", "loan", "fiscal", "trade", "invest",
                 "银行", "股", "市场", "贷款", "财政", "投资", "经济"],
     "intl": ["president", "election", "country", "united nations", "government",
-             "policy", "minister", "总统", "选举", "联合国", "政府", "外交", "部长"],
+             "policy", "minister", "united states", "washington", "diplomat",
+             "总统", "选举", "联合国", "政府", "外交", "部长", "美国", "华盛顿"],
 }
 
 
@@ -238,7 +239,8 @@ def main():
                 elif by_pair[key]["domain"] == "general" and dom != "general":
                     by_pair[key] = entry  # upgrade generic news to a domain item
         return {"presets": [
-            {"text": by_pair[k]["source_text"][:1200], "source": k[0], "target": k[1]}
+            {"text": by_pair[k]["source_text"][:1200], "source": k[0], "target": k[1],
+             "domain": by_pair[k].get("domain", "general")}
             for k in pairs if k in by_pair
         ]}
 

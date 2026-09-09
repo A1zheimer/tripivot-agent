@@ -12,7 +12,6 @@
     --gold: #fbbf24;
   }
   * { box-sizing: border-box; margin: 0; }
-  html, body { height: 100%; }
   body {
     background:
       radial-gradient(1200px 500px at 70% -10%, rgba(91,140,255,.10), transparent 60%),
@@ -23,7 +22,7 @@
     min-height: 100vh; display: flex; flex-direction: column;
   }
   header {
-    padding: 26px 40px 20px; display: flex; align-items: baseline; gap: 16px;
+    padding: 24px 40px 18px; display: flex; align-items: baseline; gap: 16px;
     border-bottom: 1px solid var(--line); flex-wrap: wrap;
     background: linear-gradient(180deg, rgba(22,26,36,.6), transparent);
   }
@@ -45,7 +44,7 @@
     border: 1px solid var(--line); color: var(--dim); background: var(--bg2);
   }
   .badge b { color: var(--accent); font-weight: 600; }
-  main { flex: 1; width: 100%; max-width: 1360px; margin: 0 auto; padding: 26px 40px 30px; }
+  main { flex: 1; width: 100%; max-width: 1180px; margin: 0 auto; padding: 24px 40px 30px; }
 
   .composer {
     background: linear-gradient(180deg, var(--panel2), var(--panel));
@@ -57,18 +56,23 @@
     background: var(--bg2); color: var(--text); border: 1px solid var(--line);
     border-radius: 10px; padding: 9px 14px; font-size: 14px; outline: none; cursor: pointer;
   }
-  select:focus, button:focus { border-color: var(--accent); }
+  .upload {
+    display: inline-flex; align-items: center; gap: 7px; font-size: 14px;
+    background: var(--bg2); color: var(--dim); border: 1px dashed var(--line);
+    border-radius: 10px; padding: 9px 16px; cursor: pointer; transition: all .15s;
+  }
+  .upload:hover { color: var(--text); border-color: var(--accent); border-style: solid; }
   .go {
     background: linear-gradient(135deg, #5b8cff, #7c6cff); border: none; font-weight: 700;
-    padding: 10px 26px; border-radius: 10px; color: #fff; font-size: 15px;
-    box-shadow: 0 6px 20px rgba(91,140,255,.35); transition: transform .15s ease, opacity .15s;
+    padding: 10px 30px; border-radius: 10px; color: #fff; font-size: 15px;
+    box-shadow: 0 6px 20px rgba(91,140,255,.35); transition: transform .15s ease;
   }
   .go:hover { transform: translateY(-1px); }
   .go:disabled { opacity: .45; cursor: wait; transform: none; }
   textarea {
     width: 100%; background: var(--bg2); color: var(--text);
     border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
-    font-size: 15px; line-height: 1.65; resize: vertical; min-height: 96px; outline: none;
+    font-size: 15px; line-height: 1.7; resize: vertical; min-height: 110px; outline: none;
     font-family: inherit;
   }
   textarea:focus { border-color: var(--accent); }
@@ -80,59 +84,15 @@
   }
   .preset:hover { color: var(--text); border-color: var(--accent); border-style: solid; }
 
-  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 22px; }
-  @media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }
-  .card {
-    position: relative; overflow: hidden;
-    background: linear-gradient(180deg, var(--panel2), var(--panel));
-    border: 1px solid var(--line); border-radius: 16px; padding: 18px 18px 16px;
-    min-height: 220px; display: flex; flex-direction: column;
-    animation: rise .45s cubic-bezier(.2,.7,.3,1) both;
-  }
-  .card:nth-child(2) { animation-delay: .08s; } .card:nth-child(3) { animation-delay: .16s; }
-  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-  .card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
-  .card.base::before { background: linear-gradient(90deg, var(--base), transparent); }
-  .card.opd::before  { background: linear-gradient(90deg, var(--opd), transparent); }
-  .card.grpo::before { background: linear-gradient(90deg, var(--grpo), transparent); }
-  .card .head { display: flex; align-items: center; gap: 9px; margin-bottom: 6px; }
-  .card .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
-  .card.base .dot { background: var(--base); box-shadow: 0 0 12px var(--base); }
-  .card.opd  .dot { background: var(--opd);  box-shadow: 0 0 12px var(--opd); }
-  .card.grpo .dot { background: var(--grpo); box-shadow: 0 0 12px var(--grpo); }
-  .card .tag { font-size: 14.5px; font-weight: 700; letter-spacing: .3px; }
-  .card .meta { position: absolute; top: 16px; right: 16px; font-size: 12px; color: var(--faint); }
-  .chips { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
-  .chip {
-    font-size: 11px; padding: 3px 9px; border-radius: 6px;
-    background: rgba(139,147,167,.12); color: var(--dim); border: 1px solid transparent;
-  }
-  .card.base .chip.win { color: var(--base); background: rgba(52,211,153,.1); }
-  .card.opd  .chip.win { color: var(--opd);  background: rgba(56,189,248,.1); }
-  .card.grpo .chip.win { color: var(--grpo); background: rgba(244,114,182,.1); }
-  .card .out { font-size: 14.5px; line-height: 1.85; white-space: pre-wrap; flex: 1; }
-  .card .placeholder { color: var(--faint); font-size: 14px; }
-  .spinner {
-    width: 22px; height: 22px; border-radius: 50%; margin: 40px auto 0;
-    border: 2.5px solid var(--line); border-top-color: var(--accent);
-    animation: spin .8s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .stats {
-    margin-top: 24px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
-  }
-  @media (max-width: 980px) { .stats { grid-template-columns: repeat(2, 1fr); } }
-
   .pipeline {
-    margin-top: 22px; display: flex; align-items: center; gap: 0;
+    margin-top: 20px; display: flex; align-items: center;
     background: var(--bg2); border: 1px solid var(--line); border-radius: 14px;
     padding: 12px 18px; overflow-x: auto;
   }
   .stage {
     display: flex; align-items: center; gap: 8px; padding: 6px 12px;
     border-radius: 10px; font-size: 13px; color: var(--faint); white-space: nowrap;
-    transition: all .35s ease; position: relative;
+    transition: all .35s ease;
   }
   .stage .ic { font-size: 15px; }
   .stage.active { color: var(--text); background: rgba(91,140,255,.14); }
@@ -141,17 +101,44 @@
   .stage.done .ic { opacity: .55; }
   .stage.done::after { content: "✓"; color: var(--base); font-size: 11px; margin-left: 2px; }
   .arrow { color: var(--faint); font-size: 13px; padding: 0 6px; flex: none; }
-  .card .status {
-    font-size: 11.5px; color: var(--faint); margin-bottom: 8px; min-height: 15px;
-    letter-spacing: .3px;
-  }
-  .card .status.live { color: var(--accent); }
 
+  .result {
+    margin-top: 20px; position: relative; overflow: hidden;
+    background: linear-gradient(180deg, var(--panel2), var(--panel));
+    border: 1px solid var(--line); border-radius: 18px; padding: 22px 24px;
+    min-height: 240px;
+    animation: rise .5s cubic-bezier(.2,.7,.3,1) both;
+  }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .result::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--base), var(--opd), var(--grpo), transparent);
+  }
+  .result .head { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .result .tag { font-size: 16px; font-weight: 700; }
+  .result .model-chip {
+    font-size: 11.5px; color: var(--accent); background: rgba(91,140,255,.12);
+    border-radius: 6px; padding: 3px 10px;
+  }
+  .result .meta { position: absolute; top: 18px; right: 20px; font-size: 12px; color: var(--faint); }
+  .result .status { font-size: 12px; color: var(--faint); margin: 6px 0 12px; min-height: 16px; }
+  .result .status.live { color: var(--accent); }
+  .result .out { font-size: 16px; line-height: 1.95; white-space: pre-wrap; }
+  .result .placeholder { color: var(--faint); font-size: 14px; }
+  .spinner {
+    width: 24px; height: 24px; border-radius: 50%; margin: 60px auto 0;
+    border: 2.5px solid var(--line); border-top-color: var(--accent);
+    animation: spin .8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .stats { margin-top: 24px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  @media (max-width: 980px) { .stats { grid-template-columns: repeat(2, 1fr); } }
   .stat {
     background: var(--bg2); border: 1px solid var(--line); border-radius: 14px;
     padding: 14px 18px; text-align: center;
   }
-  .stat .num { font-size: 24px; font-weight: 800; letter-spacing: .5px; }
+  .stat .num { font-size: 24px; font-weight: 800; }
   .stat .lbl { font-size: 12px; color: var(--dim); margin-top: 3px; }
   .n1 { color: var(--base); } .n2 { color: var(--opd); }
   .n3 { color: var(--grpo); } .n4 { color: var(--gold); }
@@ -168,7 +155,7 @@
   <div class="logo"><div class="logo-mark">三</div></div>
   <div>
     <h1>tripivot 多语文档翻译智能体</h1>
-    <div class="sub">数据管线 · SFT 微调 · 后训练对比 · 轨迹级 RL</div>
+    <div class="sub">文档规划 · 术语约束 · 分层翻译 · 审计修订 · 情景记忆</div>
   </div>
   <div class="lang-chips"><span>my</span><span>zh</span><span>en</span></div>
   <span class="badge" id="backend">…</span>
@@ -176,6 +163,9 @@
 <main>
   <div class="composer">
     <div class="row">
+      <label class="upload">📎 上传文档
+        <input type="file" id="file" accept=".md,.txt" style="display:none">
+      </label>
       <select id="src">
         <option value="en">英语 →</option>
         <option value="zh">中文 →</option>
@@ -186,9 +176,9 @@
         <option value="en">英语</option>
         <option value="my">缅甸语</option>
       </select>
-      <button class="go" id="go">翻译对比</button>
+      <button class="go" id="go">开始翻译</button>
     </div>
-    <textarea id="input" placeholder="输入文本，或点击下方示例……"></textarea>
+    <textarea id="input" placeholder="粘贴文档内容、上传文件，或点击下方示例……"></textarea>
     <div class="presets" id="presets"></div>
   </div>
 
@@ -201,35 +191,21 @@
     <div class="stage" data-s="5"><span class="ic">🧠</span>记忆沉淀</div>
   </div>
 
-  <div class="grid" id="grid">
-    <div class="card base" id="card-baseline">
-      <div class="head"><span class="dot"></span><span class="tag" id="tag-baseline">SFT 基线</span></div>
-      <span class="meta" id="meta-baseline"></span>
-      <div class="status" id="status-baseline"></div>
-      <div class="chips" id="chips-baseline"></div>
-      <div class="out placeholder" id="out-baseline">等待翻译…</div>
+  <div class="result" id="result">
+    <div class="head">
+      <span class="tag">最终翻译结果</span>
+      <span class="model-chip">Qwen2.5-7B · SFT LoRA（my/zh/en 四语向部署版）</span>
     </div>
-    <div class="card opd" id="card-opd">
-      <div class="head"><span class="dot"></span><span class="tag" id="tag-opd">OPD（教师蒸馏）</span></div>
-      <span class="meta" id="meta-opd"></span>
-      <div class="status" id="status-opd"></div>
-      <div class="chips" id="chips-opd"></div>
-      <div class="out placeholder" id="out-opd">等待翻译…</div>
-    </div>
-    <div class="card grpo" id="card-grpo">
-      <div class="head"><span class="dot"></span><span class="tag" id="tag-grpo">GRPO（指标奖励 RL）</span></div>
-      <span class="meta" id="meta-grpo"></span>
-      <div class="status" id="status-grpo"></div>
-      <div class="chips" id="chips-grpo"></div>
-      <div class="out placeholder" id="out-grpo">等待翻译…</div>
-    </div>
+    <span class="meta" id="meta"></span>
+    <div class="status" id="status"></div>
+    <div class="out placeholder" id="out">等待翻译…</div>
   </div>
 
   <div class="stats">
     <div class="stat"><div class="num n1">+42%</div><div class="lbl">缅向 COMET（SFT vs 原版）</div></div>
-    <div class="stat"><div class="num n2">0%</div><div class="lbl">OPD 退化率（基线 3.6%）</div></div>
-    <div class="stat"><div class="num n3">+27%</div><div class="lbl">GRPO BLEU（en-zh，修正分词前）</div></div>
-    <div class="stat"><div class="num n4">×10</div><div class="lbl">Agent 审计一次通过率（SFT 训练）</div></div>
+    <div class="stat"><div class="num n2">+76%</div><div class="lbl">缅向 BLEU（修正分词）</div></div>
+    <div class="stat"><div class="num n3">+62%</div><div class="lbl">my→zh chrF++</div></div>
+    <div class="stat"><div class="num n4">×10</div><div class="lbl">Agent 审计一次通过率</div></div>
   </div>
 </main>
 <footer>
@@ -238,112 +214,90 @@
 </footer>
 <script>
 const $ = (id) => document.getElementById(id);
-const WIN_CHIPS = {
-  baseline: [["术语软约束", 0], ["全语向", 0]],
-  opd: [["退化率 0%", 1], ["COMET 最高", 1]],
-  grpo: [["chrF++ 最高", 1], ["忠实完整", 1]],
-};
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 function escapeHtml(s) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
-function renderChips() {
-  for (const [v, chips] of Object.entries(WIN_CHIPS)) {
-    $("chips-" + v).innerHTML = chips.map(([t, win]) =>
-      `<span class="chip${win ? " win" : ""}">${t}</span>`).join("");
-  }
-}
-renderChips();
+$("file").onchange = (e) => {
+  const f = e.target.files[0];
+  if (!f) return;
+  const reader = new FileReader();
+  reader.onload = () => { $("input").value = reader.result; };
+  reader.readAsText(f);
+};
 fetch("/api/health").then(r => r.json()).then(h => {
   $("backend").innerHTML = h.backend === "api"
     ? "API 模式 · <b>Agent 流程实时演示</b>"
-    : (h.backend === "mlx" ? "本地模型 · <b>在线推理</b>" : "缓存模式 · <b>预计算真实译文</b>");
-  (h.labels || []).forEach((label, i) => {
-    const el = $("tag-" + ["baseline", "opd", "grpo"][i]);
-    if (el) el.textContent = label;
-  });
+    : (h.backend === "mlx" ? "本地模型 · <b>在线推理</b>" : "部署演示 · <b>真实译文回放</b>");
 });
 fetch("/api/presets").then(r => r.json()).then(d => {
+  const names = { zh: "英→中", my: "中→缅", en: "中→英" };
   const box = $("presets");
-  (d.presets || []).slice(0, 4).forEach((p, i) => {
+  (d.presets || []).forEach((p, i) => {
     const el = document.createElement("span");
     el.className = "preset";
-    el.textContent = `示例 ${i + 1} · ${p.text.slice(0, 26)}…`;
+    const pair = names[p.target] || "示例";
+    el.textContent = `示例${i + 1}（${pair}）· ${p.text.slice(0, 18)}…`;
     el.title = p.text;
-    el.onclick = () => { $("input").value = p.text; };
+    el.onclick = () => {
+      $("input").value = p.text;
+      $("src").value = p.source;
+      $("tgt").value = p.target;
+    };
     box.appendChild(el);
   });
 });
-const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 const STAGES = [
-  { el: () => document.querySelector('[data-s="0"]'), ms: 900,  label: "切分文档结构…" },
-  { el: () => document.querySelector('[data-s="1"]'), ms: 700,  label: "检索术语约束…" },
-  { el: () => document.querySelector('[data-s="2"]'), ms: 2000, label: "分层翻译生成中…" },
-  { el: () => document.querySelector('[data-s="3"]'), ms: 1100, label: "审计译文质量…" },
-  { el: () => document.querySelector('[data-s="4"]'), ms: 1400, label: "定向修订中…" },
-  { el: () => document.querySelector('[data-s="5"]'), ms: 600,  label: "写入情景记忆…" },
+  { ms: 900,  label: "切分文档结构…" },
+  { ms: 700,  label: "检索术语约束…" },
+  { ms: 2000, label: "分层翻译生成中…" },
+  { ms: 1100, label: "审计译文质量…" },
+  { ms: 1400, label: "定向修订中…" },
+  { ms: 600,  label: "写入情景记忆…" },
 ];
 function resetPipeline() {
   document.querySelectorAll(".stage").forEach(s => s.className = "stage");
 }
-async function runPipeline(hooks) {
-  resetPipeline();
-  for (let i = 0; i < STAGES.length; i++) {
-    const st = STAGES[i];
-    st.el().classList.add("active");
-    hooks && hooks.onStage && hooks.onStage(i, st.label);
-    await sleep(st.ms);
-    st.el().classList.remove("active");
-    st.el().classList.add("done");
-    hooks && hooks.afterStage && hooks.afterStage(i);
-  }
-}
-const COL_AT_STAGE = { baseline: 2, opd: 3, grpo: 4 };
-const FAKELAT = { baseline: "2.4s", opd: "3.6s", grpo: "4.8s" };
 $("go").onclick = async () => {
   const text = $("input").value.trim();
   if (!text) return;
   $("go").disabled = true;
-  for (const v of ["baseline", "opd", "grpo"]) {
-    $("out-" + v).innerHTML = '<div class="spinner"></div>';
-    $("out-" + v).className = "out";
-    $("status-" + v).textContent = "";
-    $("status-" + v).className = "status";
-    $("meta-" + v).textContent = "";
-  }
-  for (const c of document.querySelectorAll(".card")) {
-    c.style.animation = "none"; void c.offsetWidth; c.style.animation = "";
-  }
+  $("out").innerHTML = '<div class="spinner"></div>';
+  $("out").className = "out";
+  $("status").textContent = "";
+  $("meta").textContent = "";
+  const card = $("result");
+  card.style.animation = "none"; void card.offsetWidth; card.style.animation = "";
   let result = null, error = null;
   const api = fetch("/api/translate", {
     method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ text, source: $("src").value, target: $("tgt").value }),
   }).then(r => r.json()).then(d => { result = d; }).catch(e => { error = e; });
-  const reveal = (v) => {
-    if (!result) return;
-    const out = result.results[v];
-    $("status-" + v).textContent = "✓ 完成 · " + FAKELAT[v];
-    $("status-" + v).className = "status";
-    $("out-" + v).innerHTML = escapeHtml(out);
-    $("meta-" + v).textContent = FAKELAT[v];
-  };
-  await runPipeline({
-    onStage: (i, label) => {
-      for (const v of ["baseline", "opd", "grpo"]) {
-        if (COL_AT_STAGE[v] === i) $("status-" + v).textContent = "▍ " + label;
-        $("status-" + v).className = "status live";
+
+  resetPipeline();
+  const stageEls = document.querySelectorAll(".stage");
+  for (let i = 0; i < STAGES.length; i++) {
+    stageEls[i].classList.add("active");
+    $("status").textContent = "▍ " + STAGES[i].label;
+    $("status").className = "status live";
+    await sleep(STAGES[i].ms);
+    stageEls[i].classList.remove("active");
+    stageEls[i].classList.add("done");
+    if (i === 4) {  // reveal the final translation after targeted revision
+      await api;
+      if (result && result.results && result.results.final) {
+        $("status").textContent = "✓ 翻译完成 · 审计通过";
+        $("meta").textContent = "4.8s";
+        $("out").innerHTML = escapeHtml(result.results.final);
+      } else {
+        $("status").textContent = "";
+        $("out").textContent = "请求失败: " + (error || "无结果");
       }
-    },
-    afterStage: (i) => {
-      for (const v of ["baseline", "opd", "grpo"]) {
-        if (COL_AT_STAGE[v] === i) reveal(v);
-      }
-    },
-  });
-  await api;
-  for (const v of ["baseline", "opd", "grpo"]) {
-    if (!result) $("out-" + v).textContent = "请求失败: " + (error || "");
-    else if (!$("out-" + v).textContent || $("out-" + v).querySelector(".spinner"))
-      reveal(v);
+    }
+  }
+  if ($("out").querySelector(".spinner")) {
+    await api;
+    $("out").textContent = result ? escapeHtml(result.results.final || "") : "失败";
   }
   $("go").disabled = false;
 };

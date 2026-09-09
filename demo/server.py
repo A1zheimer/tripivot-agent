@@ -20,7 +20,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CACHE_PATH = os.path.join(ROOT, "demo", "cache.json")
 STATIC = os.path.join(ROOT, "demo", "static")
 
-VARIANTS = ["baseline", "opd", "grpo"]
+VARIANTS = ["baseline", "opd", "grpo", "final"]
 MODELS_DIR = os.path.join(ROOT, "demo", "models")  # demo/models/{variant}/
 
 
@@ -28,7 +28,7 @@ class TranslateRequest(BaseModel):
     text: str
     source: str = "en"
     target: str = "zh"
-    variants: list[str] = VARIANTS
+    variants: list[str] = ["final"]
     glossary_terms: list[tuple[str, str]] = []
 
 
@@ -133,8 +133,10 @@ class CachedBackend:
         for item in self.items:
             src = item["source_text"].strip()
             if src.startswith(q) or q.startswith(src[:180]):
+                if variant == "final":
+                    return item.get("final") or item["translations"].get("grpo", "")
                 return item["translations"].get(variant, "")
-        return "(缓存中无此句，请切换到 mlx 后端或补充 cache.json)"
+        return "(缓存中无此句，请使用示例或上传文档中的段落)"
 
 
 def build_prompt(req: TranslateRequest) -> str:
@@ -197,16 +199,25 @@ def main():
 
     @app.get("/api/presets")
     def presets():
-        if mode == "cached" and os.path.exists(CACHE_PATH):
+        """Pick one clean example per language pair (incl. Burmese)."""
+        out = []
+        if os.path.exists(CACHE_PATH):
             items = json.load(open(CACHE_PATH)).get("items", [])
-            picks = [items[i] for i in (0, len(items) // 3, 2 * len(items) // 3, -1)
-                     if 0 <= i < len(items)]
-            return {"presets": [{"text": p["source_text"][:180]} for p in picks]}
-        return {"presets": [
-            {"text": "The new inference engine reduces latency by 40%."},
-            {"text": "The two countries agreed to strengthen climate cooperation."},
-            {"text": "The central bank raised its policy rate by 25 basis points."},
-        ]}
+            seen = set()
+            for it in items:
+                tgt = it.get("target_language", "zh")
+                src_lang = {"zh": "en", "my": "zh", "en": "zh"}.get(tgt, "en")
+                if len(it["source_text"]) > 500 or tgt in seen:
+                    continue
+                if not it.get("final") or len(it["final"]) < 30:
+                    continue
+                seen.add(tgt)
+                out.append({"text": it["source_text"][:400],
+                            "source": src_lang, "target": tgt})
+                if len(seen) == 3:
+                    break
+        return {"presets": out or [{"text": "Translate demo", "source": "en",
+                                    "target": "zh"}]}
 
     @app.post("/api/translate")
     def translate(req: TranslateRequest):

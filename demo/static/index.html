@@ -280,7 +280,6 @@ $("go").onclick = async () => {
       await api;
       if (result && result.results && result.results.final) {
         $("status").textContent = "✓ 翻译完成 · 审计通过";
-        $("meta").textContent = "4.8s";
         $("out").innerHTML = escapeHtml(result.results.final);
       } else {
         $("status").textContent = "";

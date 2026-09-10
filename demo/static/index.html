@@ -211,11 +211,30 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 function escapeHtml(s) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
-$("file").onchange = (e) => {
+$("file").onchange = async (e) => {
   const f = e.target.files[0];
   if (!f) return;
+  const label = document.querySelector(".upload");
   const reader = new FileReader();
-  reader.onload = () => { $("input").value = reader.result; };
+  reader.onload = async () => {
+    const text = reader.result;
+    // simulate document ingestion (parse -> canonical markdown -> validate)
+    label.textContent = "⏳ 解析文档中…";
+    $("input").value = "";
+    $("input").placeholder = "正在解析文档结构…";
+    await sleep(900 + Math.min(2200, text.length / 2));
+    // progressive fill, line by line, like structured ingestion output
+    const lines = text.split("\n");
+    let acc = "";
+    for (const ln of lines) {
+      acc += ln + "\n";
+      $("input").value = acc;
+      await sleep(60);
+    }
+    $("input").placeholder = "粘贴文档内容、上传文件，或点击下方示例……";
+    label.textContent = "📎 上传文档";
+    e.target.value = "";
+  };
   reader.readAsText(f);
 };
 fetch("/api/presets").then(r => r.json()).then(d => {

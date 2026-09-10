@@ -235,12 +235,12 @@ fetch("/api/presets").then(r => r.json()).then(d => {
   });
 });
 const STAGES = [
-  { ms: 1600, label: "切分文档结构…" },
-  { ms: 1300, label: "检索术语约束…" },
-  { ms: 3800, label: "分层翻译生成中…" },
-  { ms: 2000, label: "审计译文质量…" },
-  { ms: 2600, label: "定向修订中…" },
-  { ms: 1200, label: "写入情景记忆…" },
+  { ms: 1800, label: "切分文档结构…" },
+  { ms: 1600, label: "检索术语约束…" },
+  { ms: 4800, label: "分层翻译生成中…" },
+  { ms: 2400, label: "审计译文质量…" },
+  { ms: 3200, label: "定向修订中…" },
+  { ms: 1400, label: "写入情景记忆…" },
 ];
 function resetPipeline() {
   document.querySelectorAll(".stage").forEach(s => s.className = "stage");
@@ -263,7 +263,7 @@ $("go").onclick = async () => {
 
   resetPipeline();
   const stageEls = document.querySelectorAll(".stage");
-  const factor = text.length > 500 ? 1.8 : 1.0;  // whole documents take longer
+  const factor = text.length > 500 ? 2.0 : 1.0;  // whole documents take longer
   for (let i = 0; i < STAGES.length; i++) {
     stageEls[i].classList.add("active");
     $("status").textContent = "▍ " + STAGES[i].label;
